@@ -1,23 +1,27 @@
 {
   "name": "dynsrv-vscode",
   "displayName": "dynsrv-vscode",
-  "description": "",
+  "description": "VSCode extension for DynSRV language support",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.107.0"
   },
   "categories": [
-    "Other"
-  ],
-  "activationEvents": [
-    "onLanguage:dynsrv"
+    "Programming Languages"
   ],
   "main": "./dist/extension.js",
   "contributes": {
-    "commands": [
+    "languages": [{
+      "id": "dynsrv",
+      "aliases": ["DynSRV", "dynsrv"],
+      "extensions": [".dsrv", ".dynsrv"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [
       {
-        "command": "dynsrv-vscode.helloWorld",
-        "title": "Hello World"
+        "language": "dynsrv",
+        "scopeName": "source.dynsrv",
+        "path": "./syntaxes/dynsrv.tmLanguage.json"
       }
     ]
   },

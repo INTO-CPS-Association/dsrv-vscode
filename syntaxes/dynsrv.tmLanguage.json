@@ -13,6 +13,9 @@
     },
     {
       "include": "#constants"
+    },
+    {
+      "include": "#comment"
     }
   ],
   "repository": {
@@ -25,6 +28,14 @@
         {
           "name": "keyword.control.dynsrv",
           "match": "\\b(if|then|else)\\b"
+        },
+        {
+          "name": "keyword.control.dynsrv",
+          "match": "\\b(in|out|var|aux)\\b"
+        },
+        {
+          "name": "keyword.control.dynsrv",
+          "match": "\\b(is_defined|eval)\\b"
         },
         {
           "name": "keyword.other.helper.dynsrv",
@@ -56,6 +67,20 @@
         {
           "name": "constant.numeric.dynsrv",
           "match": "\\b\\d+(\\.\\d+)?\\b"
+        }
+      ]
+    },
+    "comment": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.dynsrv",
+          "begin": "//",
+          "end": "$\\n?"
+        },
+        {
+          "name": "comment.block.dynsrv",
+          "begin": "/\\*",
+          "end": "\\*/"
         }
       ]
     }
