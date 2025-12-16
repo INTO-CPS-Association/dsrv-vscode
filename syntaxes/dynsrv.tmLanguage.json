@@ -1,0 +1,64 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "DynSRV",
+  "patterns": [
+    {
+      "include": "#keywords"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#temporal_index"
+    },
+    {
+      "include": "#constants"
+    }
+  ],
+  "repository": {
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.dynsrv",
+          "match": "\\b(defer|dynamic)\\b"
+        },
+        {
+          "name": "keyword.control.dynsrv",
+          "match": "\\b(if|then|else)\\b"
+        },
+        {
+          "name": "keyword.other.helper.dynsrv",
+          "match": "\\b(default|when|update)\\b"
+        }
+      ]
+    },
+    "temporal_index": {
+      "name": "keyword.operator.temporal.dynsrv",
+      "match": "\\[\\s*-\\d+\\d*\\]"
+    },
+    "strings": {
+      "name": "string.quoted.double.dynsrv",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.dynsrv",
+          "match": "\\\\."
+        }
+      ]
+    },
+    "constants": {
+      "patterns": [
+        {
+          "name": "constant.language.boolean.dynsrv",
+          "match": "\\b(true|false)\\b"
+        },
+        {
+          "name": "constant.numeric.dynsrv",
+          "match": "\\b\\d+(\\.\\d+)?\\b"
+        }
+      ]
+    }
+  },
+  "scopeName": "source.dynsrv"
+}
