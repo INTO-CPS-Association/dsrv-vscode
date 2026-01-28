@@ -3,6 +3,9 @@
   "name": "DynSRV",
   "patterns": [
     {
+      "include": "#comment"
+    },
+    {
       "include": "#keywords"
     },
     {
@@ -15,7 +18,13 @@
       "include": "#constants"
     },
     {
-      "include": "#comment"
+      "include": "#support"
+    },
+    {
+      "include": "#storage"
+    },
+    {
+      "include": "#punctuation"
     }
   ],
   "repository": {
@@ -23,29 +32,29 @@
       "patterns": [
         {
           "name": "keyword.control.dynsrv",
-          "match": "\\b(defer|dynamic)\\b"
-        },
-        {
-          "name": "keyword.control.dynsrv",
           "match": "\\b(if|then|else)\\b"
         },
         {
-          "name": "keyword.control.dynsrv",
-          "match": "\\b(in|out|var|aux)\\b"
+          "name": "keyword.operator.stringOps.dynsrv",
+          "match": "\\+\\+"
         },
         {
-          "name": "keyword.control.dynsrv",
-          "match": "\\b(is_defined|eval)\\b"
+          "name": "keyword.operator.logical.dynsrv",
+          "match": "(\\&\\&|\\|\\||!|=>)"
         },
         {
-          "name": "keyword.other.helper.dynsrv",
-          "match": "\\b(default|when|update)\\b"
+          "name": "keyword.operator.comparison.dynsrv",
+          "match": "(==|<=|>=|<|>)"
+        },
+        {
+          "name": "keyword.operator.arithmetic.dynsrv",
+          "match": "[+\\-*/%]"
+        },
+        {
+          "name": "keyword.operator.assignment.dynsrv",
+          "match": "="
         }
       ]
-    },
-    "temporal_index": {
-      "name": "keyword.operator.temporal.dynsrv",
-      "match": "\\[\\s*-\\d+\\d*\\]"
     },
     "strings": {
       "name": "string.quoted.double.dynsrv",
@@ -59,28 +68,64 @@
       ]
     },
     "constants": {
-      "patterns": [
-        {
-          "name": "constant.language.boolean.dynsrv",
-          "match": "\\b(true|false)\\b"
-        },
-        {
-          "name": "constant.numeric.dynsrv",
-          "match": "\\b\\d+(\\.\\d+)?\\b"
-        }
-      ]
+      "name": "constant.language.boolean.dynsrv",
+      "match": "\\b(true|false)\\b"
     },
     "comment": {
       "patterns": [
         {
           "name": "comment.line.double-slash.dynsrv",
           "begin": "//",
-          "end": "$\\n?"
+          "end": "$"
         },
         {
           "name": "comment.block.dynsrv",
           "begin": "/\\*",
           "end": "\\*/"
+        }
+      ]
+    },
+    "support": {
+      "patterns": [
+        {
+          "name": "support.function.builtin.dynsrv",
+          "match": "\\b(defer|update|is_defined|when|latch|dynamic|eval|default|init|monitored_at|dist)\\b(?=\\()"
+        },
+        {
+          "name": "support.function.math.dynsrv",
+          "match": "\\b(sin|cos|tan|abs)\\b(?=\\()"
+        },
+        {
+          "name": "support.function.list.dynsrv",
+          "match": "\\bList\\.(get|append|concat|head|tail|len)\\b(?=\\()"
+        },
+        {
+          "name": "support.function.map.dynsrv",
+          "match": "\\bMap\\.(get|insert|remove|has_key)\\b(?=\\()"
+        }
+      ]
+    },
+    "storage": {
+      "patterns": [
+        {
+          "name": "storage.type.dynsrv",
+          "match": "\\b(in|out|var|aux)\\b"
+        },
+        {
+          "name": "storage.type.builtin.dynsrv",
+          "match": "\\b(Int|Float|Bool|Str|Unit)\\b"
+        }
+      ]
+    },
+    "punctuation": {
+      "patterns": [
+        {
+          "name": "punctuation.separator.dynsrv",
+          "match": "[,:]"
+        },
+        {
+          "name": "punctuation.section.brackets.dynsrv",
+          "match": "[\\[\\]\\(\\)\\{\\}]"
         }
       ]
     }
