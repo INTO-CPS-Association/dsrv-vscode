@@ -12,9 +12,6 @@
       "include": "#strings"
     },
     {
-      "include": "#temporal_index"
-    },
-    {
       "include": "#constants"
     },
     {
