@@ -4,3 +4,8 @@ node_modules
 .vscode-test/
 *.vsix
 notes.txt
+
+
+# Added by cargo
+
+/target
