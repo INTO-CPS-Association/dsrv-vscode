@@ -12,7 +12,7 @@
   "typescript.tsc.autoDetect": "off",
 
   "rust-analyzer.linkedProjects": [
-    "./src/server/DynSRV-lsp/Cargo.toml"
+    "./server/DynSRV-lsp/Cargo.toml"
   ],
   "rust-analyzer.checkOnSave": true
 }
