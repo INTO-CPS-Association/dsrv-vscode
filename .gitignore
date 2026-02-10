@@ -10,4 +10,4 @@ notes.txt
 .vscodeignore
 
 # Added by cargo
-src/server/DynSRV-lsp/target/
+/server/DynSRV-lsp/target/
