@@ -5,7 +5,9 @@ node_modules
 *.vsix
 notes.txt
 .vscode
+.vscode/settings.json
 
+.vscodeignore
 
 # Added by cargo
 src/server/DynSRV-lsp/target/

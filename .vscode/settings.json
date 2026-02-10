@@ -11,5 +11,8 @@
   // Turn off tsc task auto detection since we have the necessary tasks as npm scripts
   "typescript.tsc.autoDetect": "off",
 
-  "rust-analyzer.linkedProjects": ["./src/server/DynSRV-lsp/Cargo.toml"]
+  "rust-analyzer.linkedProjects": [
+    "./src/server/DynSRV-lsp/Cargo.toml"
+  ],
+  "rust-analyzer.checkOnSave": true
 }
