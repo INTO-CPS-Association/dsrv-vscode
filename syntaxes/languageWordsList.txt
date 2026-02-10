@@ -1,0 +1,98 @@
+----- keywords -----
+defer()
+update()
+is_defined()
+when()
+latch()
+dynamic()
+eval()
+default()
+init()
+
+
+
+----- Built-in Types?? -----
+Int
+Float
+Bool
+Str
+Unit
+
+----- Built-in Constants -----
+true
+false
+
+----- Arithmics -----
++ (additions)
+- (subtraction)
+* (multiplication)
+/ (division)
+% (modulus)
+
+
+----- Comparison -----
+== (equal)
+< (less than)
+> (greater than)
+<= (less than or equal)
+>= (greater than or equal)
+
+
+----- Logical Operations -----
+&& (and)
+|| (or)
+! (not)
+=> (implies)
+
+
+----- String Operations -----
+++ (string concatenation)
+
+
+----- control Flow -----
+if
+then
+else
+
+
+----- Declaration -----
+in 
+out
+aux
+var
+
+
+----- Math functions -----
+sin()
+cos()
+tan()
+abs()
+
+
+----- List Functions -----
+List()
+List.get()
+List.append()
+List.concat()
+List.head()
+List.tail()
+List.len()
+
+
+----- Map Functions ------
+Map()
+Map.get()
+Map.insert()
+Map.remove()
+Map.has_key()
+
+
+----- other Operations -----
+monitored_at()
+dist()
+
+
+----- Punctuation -----
+: (used in maps)
+{} (used in var sets)
+[] (used for time indexing)
