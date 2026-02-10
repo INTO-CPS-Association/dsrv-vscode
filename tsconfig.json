@@ -6,7 +6,7 @@
 			"ES2022"
 		],
 		"sourceMap": true,
-		"rootDir": "src",
+		"rootDir": "",
 		"strict": true,  
 		"resolveJsonModule": true,
 		"esModuleInterop": true

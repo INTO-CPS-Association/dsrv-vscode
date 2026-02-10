@@ -1,9 +1,9 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import * as langData from "../../language-data.json";
-import * as server from '../../src/server/TS-Server/server';
-import {initLogger, log, show } from '../../src/server/TS-Server/logger';
+import * as langData from "./snippets/language-data.json";
+import * as server from './server/TS-Server/server';
+import {initLogger, log, show } from './server/TS-Server/logger';
 import {LanguageClient, LanguageClientOptions, ServerOptions, TransportKind} from 'vscode-languageclient/node';
 
 let client: LanguageClient; // Language client instance for communicating with the language server
