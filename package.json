@@ -3,6 +3,11 @@
   "displayName": "dynsrv-vscode",
   "description": "VSCode extension for DynSRV language support",
   "version": "0.0.1",
+  "repository": {
+    "url": "https://github.com/EmmiPigen/dynsrv-vscode.git",
+    "type": "git"
+  },
+  "license": "MIT",
   "engines": {
     "vscode": "^1.107.0"
   },

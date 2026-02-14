@@ -4,7 +4,8 @@ import * as vscode from 'vscode';
 import * as langData from "./snippets/language-data.json";
 import * as server from './server/TS-Server/server';
 import {initLogger, log, show } from './server/TS-Server/logger';
-import {LanguageClient, LanguageClientOptions, ServerOptions, TransportKind} from 'vscode-languageclient/node';
+import {LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, Trace} from 'vscode-languageclient/node';
+import path from 'path';
 
 let client: LanguageClient; // Language client instance for communicating with the language server
 
@@ -16,6 +17,32 @@ export function activate(context: vscode.ExtensionContext): void {
   initLogger('DynSRV');
   log("DynSRV extension activated");
   show();  
+  
+  const serverExe = context.asAbsolutePath(path.join('server', 'DynSRV-lsp', 'target', 'debug', 'dynsrv-lsp'));
+  
+  const serverOptions: ServerOptions = {
+    command: serverExe,
+    args: [],
+    transport: TransportKind.stdio,
+  };
+  
+  const clientOptions: LanguageClientOptions = {
+    documentSelector: [{language: 'dynsrv'}],
+    outputChannel: vscode.window.createOutputChannel('DynSRV LSP'),
+  };
+  
+  client = new LanguageClient('dynsrv-lsp', 'DynSRV LSP', serverOptions, clientOptions);
+  client.start();
+  client.setTrace(Trace.Verbose);
+  context.subscriptions.push(client);  
+  
+  
+  
+  
+  
+  
+  
+  // -------------------- Initial stuff - Will problably be changed ---------------------
   
   // The command has been defined in the package.json file
   // Now provide the implementation of the command with registerCommand
