@@ -11,3 +11,5 @@ notes.txt
 
 # Added by cargo
 /server/DynSRV-lsp/target/
+server/DynSRV-lsp/src/analyzer copy.rs
+
