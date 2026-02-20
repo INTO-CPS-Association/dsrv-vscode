@@ -3,6 +3,11 @@
   "displayName": "dynsrv-vscode",
   "description": "VSCode extension for DynSRV language support",
   "version": "0.0.1",
+  "repository": {
+    "url": "https://github.com/EmmiPigen/dynsrv-vscode.git",
+    "type": "git"
+  },
+  "license": "GPL-3.0-only",
   "engines": {
     "vscode": "^1.107.0"
   },
@@ -10,13 +15,23 @@
     "Programming Languages"
   ],
   "main": "./dist/extension.js",
+  "activationEvents": [],
   "contributes": {
-    "languages": [{
-      "id": "dynsrv",
-      "aliases": ["DynSRV", "dynsrv"],
-      "extensions": [".dsrv", ".dynsrv"],
-      "configuration": "./language-configuration.json"
-    }],
+    "languages": [
+      {
+        "id": "dynsrv",
+        "aliases": [
+          "DynSRV",
+          "dynsrv"
+        ],
+        "extensions": [
+          ".dsrv",
+          ".dynsrv",
+          ".lola"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
     "grammars": [
       {
         "language": "dynsrv",
@@ -36,19 +51,24 @@
     "watch-tests": "tsc -p . -w --outDir out",
     "pretest": "npm run compile-tests && npm run compile && npm run lint",
     "check-types": "tsc --noEmit",
-    "lint": "eslint src",
+    "lint": "eslint client/src server/TS-Server extension.ts",
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.107.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "22.x",
-    "typescript-eslint": "^8.48.1",
-    "eslint": "^9.39.1",
+    "@types/vscode": "^1.107.0",
+    "@vscode/test-cli": "^0.0.11",
+    "@vscode/test-electron": "^2.5.2",
     "esbuild": "^0.27.1",
+    "eslint": "^9.39.1",
     "npm-run-all": "^4.1.5",
     "typescript": "^5.9.3",
-    "@vscode/test-cli": "^0.0.12",
-    "@vscode/test-electron": "^2.5.2"
+    "typescript-eslint": "^8.48.1"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^9.0.1",
+    "vscode-languageserver": "^9.0.1",
+    "vscode-languageserver-textdocument": "^1.0.12"
   }
 }
