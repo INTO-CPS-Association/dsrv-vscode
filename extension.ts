@@ -9,7 +9,7 @@ import path from 'path';
 
 let client: LanguageClient; // Language client instance for communicating with the language server
 
-const snippets = langData.snippets; // File with snippets for the completion provider 
+// const snippets = langData.snippets; // File with snippets for the completion provider 
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -53,10 +53,10 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.window.showInformationMessage('Hello World from dynsrv-vscode!');
   });
   context.subscriptions.push(disposable);
-  context.subscriptions.push(
-    vscode.languages.registerCompletionItemProvider(
-      'dynsrv', new dynsrvCompletionItemProvider(), '.')
-  );
+  // context.subscriptions.push(
+  //   vscode.languages.registerCompletionItemProvider(
+  //     'dynsrv', new dynsrvCompletionItemProvider(), '.')
+  // );
 
   const diagnostics = vscode.languages.createDiagnosticCollection("dynsrv");
   context.subscriptions.push(diagnostics);
@@ -91,31 +91,31 @@ export function activate(context: vscode.ExtensionContext): void {
   }
 }
 
-class dynsrvCompletionItemProvider implements vscode.CompletionItemProvider {
-  public provideCompletionItems(
-    document: vscode.TextDocument,
-    position: vscode.Position,
-    token: vscode.CancellationToken,
-    context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
-    const range = document.getWordRangeAtPosition(position);
-    const prefix = document.getText(range);
+// class dynsrvCompletionItemProvider implements vscode.CompletionItemProvider {
+//   public provideCompletionItems(
+//     document: vscode.TextDocument,
+//     position: vscode.Position,
+//     token: vscode.CancellationToken,
+//     context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
+//     const range = document.getWordRangeAtPosition(position);
+//     const prefix = document.getText(range);
 
 
-    const snippetItems = langData.snippets.map(snip => {
-      const item = new vscode.CompletionItem(snip.prefix, vscode.CompletionItemKind.Snippet);
-      item.range = range;
-      item.filterText = snip.prefix;
-      item.insertText = new vscode.SnippetString(snip.body.join('\n'));
-      item.detail = snip.description;
+//     const snippetItems = langData.snippets.map(snip => {
+//       const item = new vscode.CompletionItem(snip.prefix, vscode.CompletionItemKind.Snippet);
+//       item.range = range;
+//       item.filterText = snip.prefix;
+//       item.insertText = new vscode.SnippetString(snip.body.join('\n'));
+//       item.detail = snip.description;
 
-      return item;
-    });
+//       return item;
+//     });
 
-    return [
-      ...snippetItems
-    ];
-  }
-}
+//     return [
+//       ...snippetItems
+//     ];
+//   }
+// }
 
 // This method is called when your extension is deactivated
 export function deactivate() { }

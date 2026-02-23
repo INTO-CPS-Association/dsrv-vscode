@@ -1,16 +1,21 @@
 # Change Log
 
-All notable changes to the "dynsrv-vscode" extension will be documented in this file.
+All notable changes to the "dsrv-vscode" extension will be documented in this file.
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
 ## [Unreleased]
 
 
+[0.1.0] - 2026-01-30
+### Added
+- Implemented a rust based language server
+- Added syntax error checking in the language server
+- Added a seperate output channel for the language server in vscode
 
-
-
-
+### Changed
+- Changed license from MIT to GPL-3.0 
+- Started to update the extension.ts file to communicate with the language server and include less junk
 
 
 [0.0.1] - 2026-01-30
