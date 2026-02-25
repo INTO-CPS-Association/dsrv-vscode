@@ -7,7 +7,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## [Unreleased]
 
 
-[0.1.0] - 2026-01-30
+[0.1.0] - 2026-02-23
 ### Added
 - Implemented a rust based language server
 - Added syntax error checking in the language server

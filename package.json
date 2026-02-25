@@ -42,13 +42,14 @@
   },
   "scripts": {
     "vscode:prepublish": "npm run build -- --minify",
-    "build": "npm run build-base -- --sourcemap",
+    "build": "npm run build-rust && npm run build-base -- --sourcemap",
     "watch": "npm run build-base -- --sourcemap --watch",
     "build-base": "node esbuild.js",
     "package": "vsce package",
     "check-types": "tsc --noEmit",
     "lint": "eslint client/src server/TS-Server extension.ts",
-    "test": "vscode-test"
+    "test": "vscode-test",
+    "build-rust": "cargo build --manifest-path ./server/DynSRV-lsp/Cargo.toml"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",

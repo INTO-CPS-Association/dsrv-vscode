@@ -58,37 +58,37 @@ export function activate(context: vscode.ExtensionContext): void {
   //     'dynsrv', new dynsrvCompletionItemProvider(), '.')
   // );
 
-  const diagnostics = vscode.languages.createDiagnosticCollection("dynsrv");
-  context.subscriptions.push(diagnostics);
+  // const diagnostics = vscode.languages.createDiagnosticCollection("dynsrv");
+  // context.subscriptions.push(diagnostics);
 
-  const refresh = async (document: vscode.TextDocument) => {
-    if (document.languageId === "dynsrv") {
-      const diags = server.validateDynSRVFile(document.uri.fsPath);
-      const convertedDiags = (await diags).map(diag =>
-        new vscode.Diagnostic(
-          new vscode.Range(
-            new vscode.Position(diag.range.start.line, diag.range.start.character),
-            new vscode.Position(diag.range.end.line, diag.range.end.character)
-          ),
-          diag.message,
-          diag.severity as vscode.DiagnosticSeverity
-        )
-      );
-      diagnostics.set(document.uri, convertedDiags);
-    }
-  };
+  // const refresh = async (document: vscode.TextDocument) => {
+  //   if (document.languageId === "dynsrv") {
+  //     const diags = server.validateDynSRVFile(document.uri.fsPath);
+  //     const convertedDiags = (await diags).map(diag =>
+  //       new vscode.Diagnostic(
+  //         new vscode.Range(
+  //           new vscode.Position(diag.range.start.line, diag.range.start.character),
+  //           new vscode.Position(diag.range.end.line, diag.range.end.character)
+  //         ),
+  //         diag.message,
+  //         diag.severity as vscode.DiagnosticSeverity
+  //       )
+  //     );
+  //     diagnostics.set(document.uri, convertedDiags);
+  //   }
+  // };
 
-  context.subscriptions.push(
-    vscode.workspace.onDidChangeTextDocument(e => refresh(e.document)),
-    vscode.workspace.onDidSaveTextDocument(refresh),
-    vscode.window.onDidChangeActiveTextEditor(editor => {
-      if (editor) { refresh(editor.document); }
-    })
-  );
+  // context.subscriptions.push(
+  //   vscode.workspace.onDidChangeTextDocument(e => refresh(e.document)),
+  //   vscode.workspace.onDidSaveTextDocument(refresh),
+  //   vscode.window.onDidChangeActiveTextEditor(editor => {
+  //     if (editor) { refresh(editor.document); }
+  //   })
+  // );
 
-  if (vscode.window.activeTextEditor) {
-    refresh(vscode.window.activeTextEditor.document);
-  }
+  // if (vscode.window.activeTextEditor) {
+  //   refresh(vscode.window.activeTextEditor.document);
+  // }
 }
 
 // class dynsrvCompletionItemProvider implements vscode.CompletionItemProvider {
