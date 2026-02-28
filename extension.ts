@@ -41,7 +41,6 @@ export function activate(context: vscode.ExtensionContext): void {
   
   
   
-  
   // -------------------- Initial stuff - Will problably be changed ---------------------
   
   // The command has been defined in the package.json file
