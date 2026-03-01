@@ -77,8 +77,8 @@
         },
         {
           "name": "comment.block.dynsrv",
-          "begin": "/\\*",
-          "end": "\\*/"
+          "begin": "\\(\\*",
+          "end": "\\*\\)"
         }
       ]
     },
