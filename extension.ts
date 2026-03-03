@@ -2,8 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import * as langData from "./snippets/language-data.json";
-import * as server from './server/TS-Server/server';
-import {initLogger, log, show } from './server/TS-Server/logger';
+import {getChannel, initLogger, log, show } from './client/src/logger';
 import {LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, Trace} from 'vscode-languageclient/node';
 import path from 'path';
 
@@ -18,6 +17,8 @@ export function activate(context: vscode.ExtensionContext): void {
   log("DynSRV extension activated");
   show();  
   
+  const outputChannel = getChannel();
+  
   const serverExe = context.asAbsolutePath(path.join('server', 'DynSRV-lsp', 'target', 'debug', 'dynsrv-lsp'));
   
   const serverOptions: ServerOptions = {
@@ -28,7 +29,7 @@ export function activate(context: vscode.ExtensionContext): void {
   
   const clientOptions: LanguageClientOptions = {
     documentSelector: [{language: 'dynsrv'}],
-    outputChannel: vscode.window.createOutputChannel('DynSRV LSP'),
+    outputChannel: outputChannel,
   };
   
   client = new LanguageClient('dynsrv-lsp', 'DynSRV LSP', serverOptions, clientOptions);
