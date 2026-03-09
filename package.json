@@ -24,6 +24,10 @@
           "DynSRV",
           "dynsrv"
         ],
+        "icon": {
+          "light": "./assets/favicon-32x32.png",
+          "dark": "./assets/favicon-32x32.png"
+        },
         "extensions": [
           ".dsrv",
           ".dynsrv",
