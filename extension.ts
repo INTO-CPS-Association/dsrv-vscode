@@ -5,6 +5,8 @@ import * as langData from "./snippets/language-data.json";
 import {getChannel, initLogger, log, show } from './client/src/logger';
 import {LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, Trace} from 'vscode-languageclient/node';
 import path from 'path';
+import "./client/src/commands";
+import { getBinaryPath } from './client/src/commands';
 
 let client: LanguageClient; // Language client instance for communicating with the language server
 
@@ -37,7 +39,22 @@ export function activate(context: vscode.ExtensionContext): void {
   client.setTrace(Trace.Verbose);
   context.subscriptions.push(client);  
   
-  
+  let runCommand = vscode.commands.registerCommand('DSRV.runCurrentFile', () => {
+    const editor = vscode.window.activeTextEditor;
+    if (!editor){ return; };
+
+    const binPath = getBinaryPath();
+    const filePath = editor.document.fileName;
+    const inputFile = filePath.replace(".lola", ".input");
+
+    const terminal = vscode.window.activeTerminal || vscode.window.createTerminal("DSRV");
+    terminal.show();
+
+    // Wrap BinaryPath
+    terminal.sendText(`"${binPath}" --parser lalr --language dsrv --input-file "${inputFile}" "${filePath}"`);
+  });
+
+  context.subscriptions.push(runCommand);
   
   
   
@@ -53,69 +70,7 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.window.showInformationMessage('Hello World from dynsrv-vscode!');
   });
   context.subscriptions.push(disposable);
-  // context.subscriptions.push(
-  //   vscode.languages.registerCompletionItemProvider(
-  //     'dynsrv', new dynsrvCompletionItemProvider(), '.')
-  // );
 
-  // const diagnostics = vscode.languages.createDiagnosticCollection("dynsrv");
-  // context.subscriptions.push(diagnostics);
-
-  // const refresh = async (document: vscode.TextDocument) => {
-  //   if (document.languageId === "dynsrv") {
-  //     const diags = server.validateDynSRVFile(document.uri.fsPath);
-  //     const convertedDiags = (await diags).map(diag =>
-  //       new vscode.Diagnostic(
-  //         new vscode.Range(
-  //           new vscode.Position(diag.range.start.line, diag.range.start.character),
-  //           new vscode.Position(diag.range.end.line, diag.range.end.character)
-  //         ),
-  //         diag.message,
-  //         diag.severity as vscode.DiagnosticSeverity
-  //       )
-  //     );
-  //     diagnostics.set(document.uri, convertedDiags);
-  //   }
-  // };
-
-  // context.subscriptions.push(
-  //   vscode.workspace.onDidChangeTextDocument(e => refresh(e.document)),
-  //   vscode.workspace.onDidSaveTextDocument(refresh),
-  //   vscode.window.onDidChangeActiveTextEditor(editor => {
-  //     if (editor) { refresh(editor.document); }
-  //   })
-  // );
-
-  // if (vscode.window.activeTextEditor) {
-  //   refresh(vscode.window.activeTextEditor.document);
-  // }
 }
 
-// class dynsrvCompletionItemProvider implements vscode.CompletionItemProvider {
-//   public provideCompletionItems(
-//     document: vscode.TextDocument,
-//     position: vscode.Position,
-//     token: vscode.CancellationToken,
-//     context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
-//     const range = document.getWordRangeAtPosition(position);
-//     const prefix = document.getText(range);
-
-
-//     const snippetItems = langData.snippets.map(snip => {
-//       const item = new vscode.CompletionItem(snip.prefix, vscode.CompletionItemKind.Snippet);
-//       item.range = range;
-//       item.filterText = snip.prefix;
-//       item.insertText = new vscode.SnippetString(snip.body.join('\n'));
-//       item.detail = snip.description;
-
-//       return item;
-//     });
-
-//     return [
-//       ...snippetItems
-//     ];
-//   }
-// }
-
-// This method is called when your extension is deactivated
 export function deactivate() { }

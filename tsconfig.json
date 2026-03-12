@@ -19,6 +19,6 @@
   "exclude": [
     "**/target",
     "**/build",
-    "server/DynSRV-lsp/target"
+    "server/DSRV-lsp/target"
   ]
 }

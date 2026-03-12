@@ -42,7 +42,34 @@
         "scopeName": "source.dsrv",
         "path": "./syntaxes/dsrv.tmLanguage.json"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "DSRV",
+      "properties": {
+        "DSRV.binaryPath": {
+          "type": "string",
+          "default": "",
+          "description": "Path to the executible of the trustworthiness checker",
+          "scope": "resource"
+        }
+      }
+    },
+    "commands": [
+       {
+        "command": "DSRV.runCurrentFile",
+        "title": "Check DSRV",
+        "category": "DSRV"
+       }
+    ],
+    "menus": {
+      "editor/content": [
+        {
+          "command": "DSRV.runCurrentFile",
+          "when": "resourceLangId == dsrv || resourceLangId == lola",
+          "group": "navigation"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run build -- --minify",
@@ -53,7 +80,7 @@
     "check-types": "tsc --noEmit",
     "lint": "eslint client/src server/TS-Server extension.ts",
     "test": "vscode-test",
-    "build-rust": "cargo build --manifest-path ./server/DynSRV-lsp/Cargo.toml"
+    "build-rust": "cargo build --manifest-path ./server/DSRV-lsp/Cargo.toml"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
