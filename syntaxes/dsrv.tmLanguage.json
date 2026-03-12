@@ -1,6 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
-  "name": "DynSRV",
+  "name": "DSRV",
   "patterns": [
     {
       "include": "#comment"
@@ -28,55 +28,55 @@
     "keywords": {
       "patterns": [
         {
-          "name": "keyword.control.dynsrv",
+          "name": "keyword.control.dsrv",
           "match": "\\b(if|then|else)\\b"
         },
         {
-          "name": "keyword.operator.stringOps.dynsrv",
+          "name": "keyword.operator.stringOps.dsrv",
           "match": "\\+\\+"
         },
         {
-          "name": "keyword.operator.logical.dynsrv",
+          "name": "keyword.operator.logical.dsrv",
           "match": "(\\&\\&|\\|\\||!|=>)"
         },
         {
-          "name": "keyword.operator.comparison.dynsrv",
+          "name": "keyword.operator.comparison.dsrv",
           "match": "(==|<=|>=|<|>)"
         },
         {
-          "name": "keyword.operator.arithmetic.dynsrv",
+          "name": "keyword.operator.arithmetic.dsrv",
           "match": "[+\\-*/%]"
         },
         {
-          "name": "keyword.operator.assignment.dynsrv",
+          "name": "keyword.operator.assignment.dsrv",
           "match": "="
         }
       ]
     },
     "strings": {
-      "name": "string.quoted.double.dynsrv",
+      "name": "string.quoted.double.dsrv",
       "begin": "\"",
       "end": "\"",
       "patterns": [
         {
-          "name": "constant.character.escape.dynsrv",
+          "name": "constant.character.escape.dsrv",
           "match": "\\\\."
         }
       ]
     },
     "constants": {
-      "name": "constant.language.boolean.dynsrv",
+      "name": "constant.language.boolean.dsrv",
       "match": "\\b(true|false)\\b"
     },
     "comment": {
       "patterns": [
         {
-          "name": "comment.line.double-slash.dynsrv",
+          "name": "comment.line.double-slash.dsrv",
           "begin": "//",
           "end": "$"
         },
         {
-          "name": "comment.block.dynsrv",
+          "name": "comment.block.dsrv",
           "begin": "\\(\\*",
           "end": "\\*\\)"
         }
@@ -85,19 +85,19 @@
     "support": {
       "patterns": [
         {
-          "name": "support.function.builtin.dynsrv",
+          "name": "support.function.builtin.dsrv",
           "match": "\\b(defer|update|is_defined|when|latch|dynamic|eval|default|init|monitored_at|dist)\\b(?=\\()"
         },
         {
-          "name": "support.function.math.dynsrv",
+          "name": "support.function.math.dsrv",
           "match": "\\b(sin|cos|tan|abs)\\b(?=\\()"
         },
         {
-          "name": "support.function.list.dynsrv",
+          "name": "support.function.list.dsrv",
           "match": "\\bList\\.(get|append|concat|head|tail|len)\\b(?=\\()"
         },
         {
-          "name": "support.function.map.dynsrv",
+          "name": "support.function.map.dsrv",
           "match": "\\bMap\\.(get|insert|remove|has_key)\\b(?=\\()"
         }
       ]
@@ -105,11 +105,11 @@
     "storage": {
       "patterns": [
         {
-          "name": "storage.type.dynsrv",
+          "name": "storage.type.dsrv",
           "match": "\\b(in|out|var|aux)\\b"
         },
         {
-          "name": "storage.type.builtin.dynsrv",
+          "name": "storage.type.builtin.dsrv",
           "match": "\\b(Int|Float|Bool|Str|Unit)\\b"
         }
       ]
@@ -117,15 +117,15 @@
     "punctuation": {
       "patterns": [
         {
-          "name": "punctuation.separator.dynsrv",
+          "name": "punctuation.separator.dsrv",
           "match": "[,:]"
         },
         {
-          "name": "punctuation.section.brackets.dynsrv",
+          "name": "punctuation.section.brackets.dsrv",
           "match": "[\\[\\]\\(\\)\\{\\}]"
         }
       ]
     }
   },
-  "scopeName": "source.dynsrv"
+  "scopeName": "source.dsrv"
 }

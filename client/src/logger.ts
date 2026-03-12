@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 let channel: vscode.OutputChannel | undefined;
 
-export function initLogger(name = 'DynSRV') {
+export function initLogger(name = 'DSRV') {
   if (!channel){
     channel = vscode.window.createOutputChannel(name);
   }

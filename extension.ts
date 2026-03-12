@@ -13,13 +13,13 @@ let client: LanguageClient; // Language client instance for communicating with t
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext): void {
-  initLogger('DynSRV');
-  log("DynSRV extension activated");
+  initLogger('DSRV');
+  log("DSRV extension activated");
   show();  
   
   const outputChannel = getChannel();
   
-  const serverExe = context.asAbsolutePath(path.join('server', 'DynSRV-lsp', 'target', 'debug', 'dynsrv-lsp'));
+  const serverExe = context.asAbsolutePath(path.join('server', 'DSRV-lsp', 'target', 'debug', 'dsrv-lsp'));
   
   const serverOptions: ServerOptions = {
     command: serverExe,
@@ -28,11 +28,11 @@ export function activate(context: vscode.ExtensionContext): void {
   };
   
   const clientOptions: LanguageClientOptions = {
-    documentSelector: [{language: 'dynsrv'}],
+    documentSelector: [{language: 'dsrv'}],
     outputChannel: outputChannel,
   };
   
-  client = new LanguageClient('dynsrv-lsp', 'DynSRV LSP', serverOptions, clientOptions);
+  client = new LanguageClient('dsrv-lsp', 'DSRV LSP', serverOptions, clientOptions);
   client.start();
   client.setTrace(Trace.Verbose);
   context.subscriptions.push(client);  

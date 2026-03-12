@@ -21,11 +21,11 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 [0.0.1] - 2026-01-30
 
 ### Added
-- Implemented the basic syntax highlighting for the "dynsrv" language.
-- Added support for recognizing keywords, variables, and comments in "dynsrv" files.
+- Implemented the basic syntax highlighting for the "dsrv" language.
+- Added support for recognizing keywords, variables, and comments in "dsrv" files.
 - Created a simple extension structure to integrate with Visual Studio Code.
 
 ### Changed
-- Initial release of the "dynsrv-vscode" extension with basic functionality.
-- Set up the extension to activate on opening files with the ".dynsrv" extension.
+- Initial release of the "dsrv-vscode" extension with basic functionality.
+- Set up the extension to activate on opening files with the ".dsrv" extension.
 

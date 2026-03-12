@@ -1,7 +1,7 @@
 {
-  "name": "dynsrv-vscode",
-  "displayName": "dynsrv-vscode",
-  "description": "VSCode extension for DynSRV language support",
+  "name": "dsrv-vscode",
+  "displayName": "dsrv-vscode",
+  "description": "VSCode extension for DSRV language support",
   "version": "0.0.1",
   "repository": {
     "url": "https://github.com/EmmiPigen/dynsrv-vscode.git",
@@ -19,10 +19,10 @@
   "contributes": {
     "languages": [
       {
-        "id": "dynsrv",
+        "id": "dsrv",
         "aliases": [
-          "DynSRV",
-          "dynsrv"
+          "DSRV",
+          "dsrv"
         ],
         "icon": {
           "light": "./assets/favicon-32x32.png",
@@ -38,9 +38,9 @@
     ],
     "grammars": [
       {
-        "language": "dynsrv",
-        "scopeName": "source.dynsrv",
-        "path": "./syntaxes/dynsrv.tmLanguage.json"
+        "language": "dsrv",
+        "scopeName": "source.dsrv",
+        "path": "./syntaxes/dsrv.tmLanguage.json"
       }
     ]
   },
