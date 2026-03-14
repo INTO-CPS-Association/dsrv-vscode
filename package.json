@@ -57,16 +57,26 @@
     "commands": [
       {
         "command": "DSRV.runCurrentFile",
-        "title": "Check DSRV",
-        "category": "DSRV"
+        "title": "Run DSRV",
+        "icon": "$(play)"
+      },
+      {
+        "command": "DSRV.runWithScope",
+        "title": "Run and choose Input",
+        "icon": "$(play)"
       }
     ],
     "menus": {
-      "editor/content": [
+      "editor/title/run": [
         {
           "command": "DSRV.runCurrentFile",
           "when": "resourceLangId == dsrv || resourceLangId == lola",
-          "group": "navigation"
+          "group": "navigation@0"
+        },
+        {
+          "command": "DSRV.runWithInput",
+          "when": "resourceLangId == dsrv || resourceLangId == lola",
+          "group": "navigation@0"
         }
       ]
     }

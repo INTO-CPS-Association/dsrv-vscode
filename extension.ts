@@ -1,12 +1,12 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import * as langData from "./snippets/language-data.json";
-import {getChannel, initLogger, log, show } from './client/src/logger';
-import {LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, Trace} from 'vscode-languageclient/node';
+// import * as langData from "./snippets/language-data.json";
+import { getChannel, initLogger, log, show } from './client/src/logger';
+import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, Trace } from 'vscode-languageclient/node';
 import path from 'path';
 import "./client/src/commands";
-import { getBinaryPath } from './client/src/commands';
+import { runSimpleCommand, runWithInput } from './client/src/commands';
 
 let client: LanguageClient; // Language client instance for communicating with the language server
 
@@ -17,50 +17,40 @@ let client: LanguageClient; // Language client instance for communicating with t
 export function activate(context: vscode.ExtensionContext): void {
   initLogger('DSRV');
   log("DSRV extension activated");
-  show();  
-  
+  show();
+
   const outputChannel = getChannel();
-  
+
   const serverExe = context.asAbsolutePath(path.join('server', 'DSRV-lsp', 'target', 'debug', 'dsrv-lsp'));
-  
+
   const serverOptions: ServerOptions = {
     command: serverExe,
     args: [],
     transport: TransportKind.stdio,
   };
-  
+
   const clientOptions: LanguageClientOptions = {
-    documentSelector: [{language: 'dsrv'}],
+    documentSelector: [{ language: 'dsrv' }],
     outputChannel: outputChannel,
   };
-  
+
   client = new LanguageClient('dsrv-lsp', 'DSRV LSP', serverOptions, clientOptions);
   client.start();
   client.setTrace(Trace.Verbose);
-  context.subscriptions.push(client);  
-  
-  let runCommand = vscode.commands.registerCommand('DSRV.runCurrentFile', () => {
-    const editor = vscode.window.activeTextEditor;
-    if (!editor){ return; };
+  context.subscriptions.push(client);
 
-    const binPath = getBinaryPath();
-    const filePath = editor.document.fileName;
-    const inputFile = filePath.replace(".lola", ".input");
+  const commands = [
+  vscode.commands.registerCommand('DSRV.runCurrentFile', runSimpleCommand),
+  vscode.commands.registerCommand('DSRV.runWithInput', runWithInput),
+  ];
 
-    const terminal = vscode.window.activeTerminal || vscode.window.createTerminal("DSRV");
-    terminal.show();
+  context.subscriptions.push(...commands);
 
-    // Wrap BinaryPath
-    terminal.sendText(`"${binPath}" --parser lalr --language dsrv --input-file "${inputFile}" "${filePath}"`);
-  });
 
-  context.subscriptions.push(runCommand);
-  
-  
-  
-  
+
+
   // -------------------- Initial stuff - Will problably be changed ---------------------
-  
+
   // The command has been defined in the package.json file
   // Now provide the implementation of the command with registerCommand
   // The commandId parameter must match the command field in package.json
