@@ -7,6 +7,20 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## [Unreleased]
 
 
+[0.2.0] - 2026-03-17
+### Added
+- Added support for code completion in the language server
+- Added Code running capabilities in the language server
+- Added the ICAPL License and the ICA-USAGE-MODE to the project 
+
+### Changed
+- Changed all mentions of "DynSRV" to "dsrv" in the extension and language server
+- Restructured the server folder to be more organized and easier to navigate
+
+### Removed
+- Removed the old typescript based language server and all related files and dependencies
+
+
 [0.1.0] - 2026-02-23
 ### Added
 - Implemented a rust based language server

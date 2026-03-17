@@ -1,6 +1,7 @@
-# dynsrv-vscode README
+# DSRV VS Code Language Extension
 
-This is the README for your extension "dsrv-vscode". After writing up a brief description, we recommend including the following sections.
+This is a VS Code extension that provides language support for the "DSRV" language, created by the Into-CPS association. The extension includes features such as syntax highlighting, code completion, and error checking for "DSRV" files, as well as code running capabilities to execute "DSRV" code directly from the editor. 
+
 
 ## Features
 
