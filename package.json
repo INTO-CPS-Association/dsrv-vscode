@@ -90,7 +90,7 @@
     "check-types": "tsc --noEmit",
     "lint": "eslint client/src server/TS-Server extension.ts",
     "test": "vscode-test",
-    "build-rust": "cargo build --release --manifest-path ./server/DSRV-lsp/Cargo.toml"
+    "build-rust": "cargo build --release --manifest-path ./server/Cargo.toml"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
