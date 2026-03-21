@@ -23,7 +23,7 @@ function executeCommand(modelFile: string, inputFile: string) {
   const quote = (p: string) => `'${p.replace(/'/g, "'\\''")}'`;
 
   // Builds the command to run the binary with the appropriate arguments, ensuring that paths with spaces are properly handled by quoting them.
-  const command = `${quote(binPath)} --parser lalr --language dsrv --input-file ${quote(inputFile)} ${quote(modelFile)}`;
+  const command = `${quote(binPath)} --parser lalr --language dsrv --semantics untimed --input-file ${quote(inputFile)} ${quote(modelFile)}`;
 
   terminal.show();
   terminal.sendText(command);
