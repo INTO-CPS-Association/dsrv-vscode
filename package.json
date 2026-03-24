@@ -62,17 +62,17 @@
       },
       {
         "command": "DSRV.runWithInput",
-        "title": "Run and choose Input",
+        "title": "Choose Input File and Run DSRV",
         "icon": "$(play)"
       },
       {
         "command": "DSRV.runWithTypes",
-        "title": "Run with Typed semantics",
+        "title": "Run DSRV with Typed semantics",
         "icon": "$(play)"
       },
       {
         "command": "DSRV.runWithInputAndTypes",
-        "title": "Choose Input and run with Typed semantics",
+        "title": "Choose Input file and run with Typed semantics",
         "icon": "$(play)"
       }
     ],
@@ -80,23 +80,23 @@
       "editor/title/run": [
         {
           "command": "DSRV.runCurrentFile",
-          "when": "resourceLangId == dsrv || resourceLangId == lola",
+          "when": "resourceLangId == dsrv || resourceLangId == lola && !inDiffEditor",
           "group": "navigation@0"
         },
         {
           "command": "DSRV.runWithInput",
-          "when": "resourceLangId == dsrv || resourceLangId == lola",
-          "group": "navigation@0"
+          "when": "resourceLangId == dsrv || resourceLangId == lola && !inDiffEditor",
+          "group": "navigation@1"
         },
         {
           "command": "DSRV.runWithTypes",
-          "when": "resourceLangId == dsrv || resourceLangId == lola",
-          "group": "navigation@0"
+          "when": "resourceLangId == dsrv || resourceLangId == lola && !inDiffEditor",
+          "group": "navigation@2"
         },
         {
           "command": "DSRV.runWithInputAndTypes",
-          "when": "resourceLangId == dsrv || resourceLangId == lola",
-          "group": "navigation@0"
+          "when": "resourceLangId == dsrv || resourceLangId == lola && !inDiffEditor",
+          "group": "navigation@3"
         }
       ]
     }
