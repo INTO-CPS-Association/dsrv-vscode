@@ -10,6 +10,5 @@ notes.txt
 .vscodeignore
 
 # Added by cargo
-/server/DSRV-lsp/target/
-server/DSRV-lsp/src/analyzer copy.rs
-
+/server/target/
+target/
