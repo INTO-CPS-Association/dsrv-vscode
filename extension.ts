@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 import { getChannel, initLogger, log, show } from './client/src/logger';
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, Trace } from 'vscode-languageclient/node';
 import path from 'path';
-import { runSimpleCommand, runWithInput } from './client/src/commands';
+import { runSimpleCommand, runWithInput, runWithInputAndTypes, runWithTypes } from './client/src/commands';
 
 let client: LanguageClient; // Language client instance for communicating with the language server
 
@@ -38,6 +38,8 @@ export function activate(context: vscode.ExtensionContext): void {
   const commands = [
   vscode.commands.registerCommand('DSRV.runCurrentFile', runSimpleCommand),
   vscode.commands.registerCommand('DSRV.runWithInput', runWithInput),
+  vscode.commands.registerCommand('DSRV.runWithTypes', runWithTypes),
+  vscode.commands.registerCommand('DSRV.runWithInputAndTypes', runWithInputAndTypes),
   ];
 
   context.subscriptions.push(...commands);

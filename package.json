@@ -64,6 +64,16 @@
         "command": "DSRV.runWithInput",
         "title": "Run and choose Input",
         "icon": "$(play)"
+      },
+      {
+        "command": "DSRV.runWithTypes",
+        "title": "Run with Typed semantics",
+        "icon": "$(play)"
+      },
+      {
+        "command": "DSRV.runWithInputAndTypes",
+        "title": "Choose Input and run with Typed semantics",
+        "icon": "$(play)"
       }
     ],
     "menus": {
@@ -75,6 +85,16 @@
         },
         {
           "command": "DSRV.runWithInput",
+          "when": "resourceLangId == dsrv || resourceLangId == lola",
+          "group": "navigation@0"
+        },
+        {
+          "command": "DSRV.runWithTypes",
+          "when": "resourceLangId == dsrv || resourceLangId == lola",
+          "group": "navigation@0"
+        },
+        {
+          "command": "DSRV.runWithInputAndTypes",
           "when": "resourceLangId == dsrv || resourceLangId == lola",
           "group": "navigation@0"
         }
