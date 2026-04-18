@@ -1,10 +1,10 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import { getChannel, initLogger, log, show } from './client/src/logger';
+import { getChannel, initLogger, log, show } from './src/logger';
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, Trace } from 'vscode-languageclient/node';
 import path from 'path';
-import { runSimpleCommand, runWithInput, runWithInputAndTypes, runWithTypes } from './client/src/commands';
+import { runSimpleCommand, runWithInput, runWithInputAndTypes, runWithTypes } from './src/commands';
 
 let client: LanguageClient; // Language client instance for communicating with the language server
 
@@ -36,10 +36,10 @@ export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(client);
 
   const commands = [
-  vscode.commands.registerCommand('DSRV.runCurrentFile', runSimpleCommand),
-  vscode.commands.registerCommand('DSRV.runWithInput', runWithInput),
-  vscode.commands.registerCommand('DSRV.runWithTypes', runWithTypes),
-  vscode.commands.registerCommand('DSRV.runWithInputAndTypes', runWithInputAndTypes),
+    vscode.commands.registerCommand('DSRV.runCurrentFile', runSimpleCommand),
+    vscode.commands.registerCommand('DSRV.runWithInput', runWithInput),
+    vscode.commands.registerCommand('DSRV.runWithTypes', runWithTypes),
+    vscode.commands.registerCommand('DSRV.runWithInputAndTypes', runWithInputAndTypes),
   ];
 
   context.subscriptions.push(...commands);
