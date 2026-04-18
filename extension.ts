@@ -1,10 +1,11 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import { getChannel, initLogger, log, show } from './src/logger';
+import { getChannel, initLogger, log, show } from './client/src/logger';
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, Trace } from 'vscode-languageclient/node';
 import path from 'path';
-import { runSimpleCommand, runWithInput, runWithInputAndTypes, runWithTypes } from './src/commands';
+import { runSimpleCommand, runWithInput, runWithInputAndTypes, runWithTypes } from './client/src/commands';
+import * as fs from 'fs';
 
 let client: LanguageClient; // Language client instance for communicating with the language server
 
@@ -47,3 +48,21 @@ export function activate(context: vscode.ExtensionContext): void {
 }
 
 export function deactivate() { }
+
+
+// Helper function to get the path to the binary, checking both the config and the default locations.
+function resolveServerExe(context: vscode.ExtensionContext): string {
+  const debugPath = context.asAbsolutePath(path.join('target', 'debug', 'dsrv-lsp'));
+  const releasePath = context.asAbsolutePath(path.join('target', 'release', 'dsrv-lsp'));
+
+  if (fs.existsSync(debugPath)) {
+    return debugPath;
+  }
+
+  if (fs.existsSync(releasePath)) {
+    return releasePath;
+  }
+
+  throw new Error(`Could not find dsrv-lsp in ${debugPath} or ${releasePath}`);
+
+}
