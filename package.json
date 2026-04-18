@@ -30,8 +30,7 @@
         },
         "extensions": [
           ".dsrv",
-          ".dynsrv",
-          ".lola"
+          ".dynsrv"
         ],
         "configuration": "./language-configuration.json"
       }
