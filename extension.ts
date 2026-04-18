@@ -18,10 +18,9 @@ export function activate(context: vscode.ExtensionContext): void {
 
   const outputChannel = getChannel();
 
-  const serverExe = context.asAbsolutePath(path.join('target', 'debug', 'dsrv-lsp'));
 
   const serverOptions: ServerOptions = {
-    command: serverExe,
+    command: resolveServerExe(context),
     args: [],
     transport: TransportKind.stdio,
   };
