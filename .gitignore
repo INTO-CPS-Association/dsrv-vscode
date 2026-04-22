@@ -12,3 +12,5 @@ notes.txt
 # Added by cargo
 /server/target/
 target/
+
+text.rs
