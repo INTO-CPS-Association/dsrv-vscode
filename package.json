@@ -98,6 +98,15 @@
           "group": "navigation@3"
         }
       ]
+    },
+    "configurationDefaults": {
+      "[dsrv]": {
+        "editor.quickSuggestions": {
+          "other": true,
+          "comments": false,
+          "strings": true
+        }
+      }
     }
   },
   "scripts": {
