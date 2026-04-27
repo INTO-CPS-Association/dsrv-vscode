@@ -15,7 +15,7 @@ export function getBinaryPath(): string {
   return binaryPath;
 }
 
-function executeCommand(modelFile: string, inputFile: string) {
+export function executeCommand(modelFile: string, inputFile: string) {
   const binPath = getBinaryPath();
   const terminal = vscode.window.activeTerminal || vscode.window.createTerminal('DSRV Terminal');
 
@@ -27,7 +27,6 @@ function executeCommand(modelFile: string, inputFile: string) {
 
   terminal.show();
   terminal.sendText(command);
-
 }
 
 
