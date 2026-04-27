@@ -115,7 +115,7 @@
     "build-debug": "npm run build-rust-debug && npm run build-base -- --sourcemap",
     "build-rust": "cargo build --release --manifest-path ./server/Cargo.toml",
     "build-rust-debug": "cargo build --manifest-path ./server/Cargo.toml",
-    "test:integration": "vscode-test",
+    "test:integration": "npm run build-base && vscode-test",
     "build-base": "node esbuild.js",
     "package": "vsce package",
     "check-types": "tsc --noEmit",
