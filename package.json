@@ -1,16 +1,26 @@
 {
   "name": "dsrv-vscode",
-  "displayName": "dsrv-vscode",
+  "displayName": "DSRV Language Support for VSCode",
   "description": "VSCode extension for DSRV language support",
   "version": "0.0.1",
   "repository": {
-    "url": "https://github.com/EmmiPigen/dynsrv-vscode.git",
+    "url": "https://github.com/EmmiPigen/dsrv-vscode.git",
     "type": "git"
   },
+  "icon": "./assets/favicon-32x32.png",
   "license": "GPL-3.0-only",
   "engines": {
     "vscode": "^1.107.0"
   },
+  "keywords": [
+    "dsrv"
+  ],
+  "files": [
+    "dist",
+    "syntaxes",
+    "assets",
+    "language-configuration.json"
+  ],
   "categories": [
     "Programming Languages"
   ],
@@ -29,8 +39,7 @@
           "dark": "./assets/favicon-32x32.png"
         },
         "extensions": [
-          ".dsrv",
-          ".dynsrv"
+          ".dsrv"
         ],
         "configuration": "./language-configuration.json"
       }
@@ -79,22 +88,22 @@
       "editor/title/run": [
         {
           "command": "DSRV.runCurrentFile",
-          "when": "resourceLangId == dsrv || resourceLangId == lola && !inDiffEditor",
+          "when": "resourceLangId == dsrv  && !inDiffEditor",
           "group": "navigation@0"
         },
         {
           "command": "DSRV.runWithInput",
-          "when": "resourceLangId == dsrv || resourceLangId == lola && !inDiffEditor",
+          "when": "resourceLangId == dsrv  && !inDiffEditor",
           "group": "navigation@1"
         },
         {
           "command": "DSRV.runWithTypes",
-          "when": "resourceLangId == dsrv || resourceLangId == lola && !inDiffEditor",
+          "when": "resourceLangId == dsrv && !inDiffEditor",
           "group": "navigation@2"
         },
         {
           "command": "DSRV.runWithInputAndTypes",
-          "when": "resourceLangId == dsrv || resourceLangId == lola && !inDiffEditor",
+          "when": "resourceLangId == dsrv  && !inDiffEditor",
           "group": "navigation@3"
         }
       ]
@@ -115,6 +124,7 @@
     "build-debug": "npm run build-rust-debug && npm run build-base -- --sourcemap",
     "build-rust": "cargo build --release --manifest-path ./server/Cargo.toml",
     "build-rust-debug": "cargo build --manifest-path ./server/Cargo.toml",
+    "test:all": "npm run test:rust && npm run test:integration",
     "test:integration": "npm run build-base && vscode-test",
     "test:rust": "cargo test --lib",
     "build-base": "node esbuild.js",
@@ -132,14 +142,11 @@
     "esbuild": "^0.27.4",
     "eslint": "^9.39.1",
     "mocha": "^11.3.0",
-    "npm-run-all": "^4.1.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.48.1"
   },
   "dependencies": {
-    "vscode-languageclient": "^9.0.1",
-    "vscode-languageserver": "^9.0.1",
-    "vscode-languageserver-textdocument": "^1.0.12"
+    "vscode-languageclient": "^9.0.1"
   }
 }

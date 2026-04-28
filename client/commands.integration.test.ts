@@ -14,8 +14,8 @@ suite("Commands Integration Test Suite", () => {
 
   setup(async () => {
     originalConfig = vscode.workspace.getConfiguration("DSRV");
-    fs.writeFileSync(tmpFile, "mock dsrv content");
-    fs.writeFileSync(tmpInput, "mock input content");
+    fs.writeFileSync(tmpFile, "in a: Int\nin b: Int\nout c: Int\nc = a + b");
+    fs.writeFileSync(tmpInput, "0: x = 1\ny = 2\n1: x = 2\ny = 3\n2: x = 3\ny = 4");
     await originalConfig.update(
       "binaryPath",
       "/home/emili/projects/robosapiens-trustworthiness-checker/target/release/trustworthiness_checker",
@@ -61,9 +61,10 @@ suite("Commands Integration Test Suite", () => {
       vscode.Uri.file(tmpFile),
     );
     await vscode.window.showTextDocument(doc);
-
+    
     const initialTerminal = vscode.window.terminals.length;
     command.runSimpleCommand();
+    
     assert.ok(
       vscode.window.terminals.length >= initialTerminal,
       "Terminal should be created or reused",
@@ -85,3 +86,4 @@ suite("Commands Integration Test Suite", () => {
     );
   });
 });
+

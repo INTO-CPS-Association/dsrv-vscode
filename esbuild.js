@@ -45,7 +45,7 @@ async function main() {
   });
 
   const testsCtx = await esbuild.context({
-    entryPoints: ["client/logger.integration.test.ts", "client/commands.integration.test.ts", "client/extension.integration.test.ts"],
+    entryPoints: ["client/logger.integration.test.ts", "client/commands.integration.test.ts", "client/extension.integration.test.ts", "client/lsp.integration.test.ts"],
     bundle: true,
     format: "cjs",
     minify: minify,

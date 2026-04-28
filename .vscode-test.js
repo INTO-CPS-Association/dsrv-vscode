@@ -8,7 +8,9 @@ module.exports = defineConfig([
     // Remove --disable-gpu to use hardware acceleration if available
     // Add --info to see more detailed logs in the terminal
     launchArgs: [
-      "--info"
+      // "--info",
+      "--disable-gpu",
+      // "--enable-unsafe-swiftshader",
     ],
     mocha: {
       ui: "tdd",
