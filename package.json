@@ -116,6 +116,7 @@
     "build-rust": "cargo build --release --manifest-path ./server/Cargo.toml",
     "build-rust-debug": "cargo build --manifest-path ./server/Cargo.toml",
     "test:integration": "npm run build-base && vscode-test",
+    "test:rust": "cargo test --lib",
     "build-base": "node esbuild.js",
     "package": "vsce package",
     "check-types": "tsc --noEmit",
