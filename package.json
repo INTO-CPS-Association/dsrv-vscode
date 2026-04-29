@@ -124,7 +124,7 @@
     "build-debug": "npm run build-rust-debug && npm run build-base -- --sourcemap",
     "build-rust": "cargo build --release --manifest-path ./server/Cargo.toml",
     "build-rust-debug": "cargo build --manifest-path ./server/Cargo.toml",
-    "test:all": "npm run test:rust && npm run test:integration",
+    "test:all": "npm run test:rust && npm run test:ts",
     "test:ts": "npm run build-base && vscode-test",
     "test:rust": "cargo test --lib",
     "build-base": "node esbuild.js",
