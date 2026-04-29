@@ -24,14 +24,6 @@ suite("Language Server Integration Test Suite", () => {
     fs.writeFileSync(files.invalidTyped, "in a: Int\nin b: Str\nout c: Int\nc = a + b"); // Type error
     // fs.writeFileSync(files.inputFile, "0: x = 1\ny = 2\n1: x = 2\ny = 3\n2: x = 3\ny = 4"); // Input file for testing
 
-    // Configure the extension to use the correct path to the Rust server binary
-    const config = vscode.workspace.getConfiguration("DSRV");
-    await config.update(
-      "binaryPath",
-      "/home/emili/projects/robosapiens-trustworthiness-checker/target/release/trustworthiness_checker",
-      vscode.ConfigurationTarget.Global,
-    );
-
     await vscode.extensions.getExtension("dsrv")?.activate();
   });
 
