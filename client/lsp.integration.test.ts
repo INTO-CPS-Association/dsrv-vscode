@@ -7,211 +7,260 @@ import * as fs from "fs";
 
 suite("Language Server Integration Test Suite", () => {
   const tempDir = os.tmpdir();
-  const validFileUntyped = path.join(tempDir, "valid_model.dsrv");
-  const validFileTyped = path.join(tempDir, "valid_model_typed.dsrv");
-  const invalidFileUntyped = path.join(tempDir, "invalid_model.dsrv");
-  const invalidFileTyped = path.join(tempDir, "invalid_model_typed.dsrv");
-  const inputFile = path.join(tempDir, "valid_model.input");
+  // Define test file paths
+  const files = {
+    validUntyped: path.join(tempDir, "valid_untyped.dsrv"),
+    invalidUntyped: path.join(tempDir, "invalid_untyped.dsrv"),
+    validTyped: path.join(tempDir, "valid_typed.dsrv"),
+    invalidTyped: path.join(tempDir, "invalid_typed.dsrv"),
+    // inputFile: path.join(tempDir, "input_file.dsrv"),
+  };
 
   setup(async () => {
-    fs.writeFileSync(validFileUntyped, "in a\nin b\nout c\nc = a + b");
+    // Create test files with appropriate content
+    fs.writeFileSync(files.validUntyped, "in a\nin b\nout c\nc = a + b"); // Valid untyped file
+    fs.writeFileSync(files.invalidUntyped, "in a\nin b\nout c\nc = a + b +"); // Syntax error
+    fs.writeFileSync(files.validTyped, "in a: Int\nin b: Int\nout c: Int\nc = a + b"); // Valid typed file
+    fs.writeFileSync(files.invalidTyped, "in a: Int\nin b: Str\nout c: Int\nc = a + b"); // Type error
+    // fs.writeFileSync(files.inputFile, "0: x = 1\ny = 2\n1: x = 2\ny = 3\n2: x = 3\ny = 4"); // Input file for testing
 
-    fs.writeFileSync(
-      validFileTyped,
-      "in a: Int\nin b: Int\nout c: Int\nc = a + b",
-    );
-
-    fs.writeFileSync(invalidFileUntyped, "in a\nin b\nout c\nc = a + b +"); // Syntax error
-
-    fs.writeFileSync(
-      invalidFileTyped,
-      "in a: Int\nin b: Str\nout c: Int\nc = a + b",
-    ); // Type error
-
-    fs.writeFileSync(
-      inputFile,
-      "0: x = 1\ny = 2\n1: x = 2\ny = 3\n2: x = 3\ny = 4",
-    );
-
+    // Configure the extension to use the correct path to the Rust server binary
     const config = vscode.workspace.getConfiguration("DSRV");
     await config.update(
       "binaryPath",
       "/home/emili/projects/robosapiens-trustworthiness-checker/target/release/trustworthiness_checker",
       vscode.ConfigurationTarget.Global,
     );
+
+    await vscode.extensions.getExtension("dsrv")?.activate();
   });
 
   teardown(async () => {
-    if (fs.existsSync(validFileUntyped)) fs.unlinkSync(validFileUntyped);
-    if (fs.existsSync(validFileTyped)) fs.unlinkSync(validFileTyped);
-    if (fs.existsSync(invalidFileUntyped)) fs.unlinkSync(invalidFileUntyped);
-    if (fs.existsSync(invalidFileTyped)) fs.unlinkSync(invalidFileTyped);
-    if (fs.existsSync(inputFile)) fs.unlinkSync(inputFile);
+    // Clean up test files
+    Object.values(files).forEach((file) => {
+      if (fs.existsSync(file)) fs.unlinkSync(file);
+    });
 
+    // Close all editors to ensure a clean state for the next test run
     await vscode.commands.executeCommand("workbench.action.closeAllEditors");
   });
 
-  test("Test diagnostic for invalid files", async () => {
-    let doc = await vscode.workspace.openTextDocument(
-      vscode.Uri.file(invalidFileUntyped),
-    );
-    await vscode.window.showTextDocument(doc);
+  // test("Diagnostic - Valid Untyped File - Reports no error")
+  suite("Diagnostic", () => {
+    test("Valid Untyped File - Reports no errors", async () => {
+      let doc = await openDoc(files.validUntyped);
+      await waitForDiagnostics(doc.uri, 0);
 
-    await waitForDiagnostics(doc.uri);
-    // await sleep(100);
+      const diagnostic = vscode.languages.getDiagnostics(doc.uri);
 
-    let diagnostic = vscode.languages.getDiagnostics(doc.uri);
+      // console.log(`Diagnostics for valid untyped file: ${diagnostic.length}`);
 
-    assert.ok(
-      diagnostic.length > 0,
-      "Language Server should return at least one diagnostic error for invalid syntax, got " +
-        diagnostic.length,
-    );
-
-    doc = await vscode.workspace.openTextDocument(
-      vscode.Uri.file(invalidFileTyped),
-    );
-    await vscode.window.showTextDocument(doc);
-
-    await waitForDiagnostics(doc.uri);
-
-    diagnostic = vscode.languages.getDiagnostics(doc.uri);
-
-    assert.ok(
-      diagnostic.length > 0,
-      "Language Server should return at least one diagnostic error for type errors, got " +
-        diagnostic.length,
-    );
-  });
-
-  test("Test no erros on valid files", async () => {
-    // Test untyped valid file
-    let doc = await vscode.workspace.openTextDocument(
-      vscode.Uri.file(validFileUntyped),
-    );
-    await vscode.window.showTextDocument(doc);
-
-    await sleep(500);
-    let diagnostic = vscode.languages.getDiagnostics(doc.uri);
-
-    assert.equal(
-      diagnostic.length,
-      0,
-      "Language Server should not return errors for valid syntax",
-    );
-
-    // Test typed valid file
-    doc = await vscode.workspace.openTextDocument(
-      vscode.Uri.file(validFileTyped),
-    );
-    await vscode.window.showTextDocument(doc);
-
-    await sleep(500);
-
-    diagnostic = vscode.languages.getDiagnostics(doc.uri);
-
-    assert.equal(
-      diagnostic.length,
-      0,
-      "Language Server should not return errors for valid typed syntax",
-    );
-  });
-
-  test("Test provide Hover information", async () => {
-    const doc = await vscode.workspace.openTextDocument(
-      vscode.Uri.file(validFileTyped),
-    );
-    const editor = await vscode.window.showTextDocument(doc);
-
-    await sleep(500);
-
-    const pos = new vscode.Position(1, 2); // Position over 'a' variable
-
-    const hover = await vscode.commands.executeCommand<vscode.Hover[]>(
-      "vscode.executeHoverProvider",
-      doc.uri,
-      pos,
-    );
-
-    // Check if the hover content contains the expected type string
-    const contents = hover[0].contents
-      .map((c) =>
-        typeof c === "string" ? c : (c as vscode.MarkdownString).value,
-      )
-      .join(" ");
-
-    // console.log("Hover contents:", contents);
-
-    assert.ok(
-      contents.includes("in b: Int"),
-      "Hover information should include the type of variable 'b'",
-    );
-  });
-
-  test("Test provide auto completion suggestions", async () => {
-    const doc = await vscode.workspace.openTextDocument(
-      vscode.Uri.file(invalidFileUntyped),
-    );
-
-
-    const editor = await vscode.window.showTextDocument(doc);
-
-    await waitForDiagnostics(doc.uri);
-    // await sleep(10000);
-
-    // Simulate the user manually typing 'd' at the end of the file
-    await editor.edit((editBuilder) => {
-      editBuilder.insert(new vscode.Position(3, 11), "d");
+      // Assert that there are no diagnostics for the valid untyped file
+      assert.ok(
+        diagnostic.length == 0,
+        `Expected no diagnostics for valid untyped file, but got ${diagnostic.length}`,
+      );
     });
 
-    // Wait a brief moment for the textDocument/didChange event to sync with the Rust server
-    await sleep(500);
+    test("Valid Typed File - Reports no errors", async () => {
+      let doc = await openDoc(files.validTyped);
+      await waitForDiagnostics(doc.uri, 0);
 
-    // Position exactly after the newly typed 'd'
-    const pos = new vscode.Position(3, 12);
+      const diagnostic = vscode.languages.getDiagnostics(doc.uri);
 
-    const completions = await vscode.commands.executeCommand<
-      vscode.CompletionList | vscode.CompletionItem[]
-    >("vscode.executeCompletionItemProvider", doc.uri, pos);
+      // console.log(`Diagnostics for valid typed file: ${diagnostic.length}`);
 
-    // console.log("Completion suggestions:", JSON.stringify(completions, null, 2));
-    await sleep(500);
-    const items = Array.isArray(completions) ? completions : completions.items;
+      // Assert that there are no diagnostics for the valid untyped file
+      assert.ok(
+        diagnostic.length == 0,
+        `Expected no diagnostics for valid untyped file, but got ${diagnostic.length}`,
+      );
+    });
 
-    assert.ok(
-      items.length >= 1,
-      "Should provide at least one completion suggestion but got " +
-        items.length,
-    );
+    test("Invalid Untyped File - Report syntax error", async () => {
+      let doc = await openDoc(files.invalidUntyped);
+      await waitForDiagnostics(doc.uri);
 
-    const labels = items.map((item) =>
-      typeof item.label === "string" ? item.label : item.label.label,
-    );
+      const diagnostic = vscode.languages.getDiagnostics(doc.uri);
 
-    // Check that it includes 'default' as a suggestion, as the editor add a d and therefore the function 'default' should be suggested
-    assert.ok(
-      labels.includes("default"),
-      "Completion suggestions should include 'default' for variables in scope, but got: " +
-        labels.join(", "),
-    );
+      // console.log(`Diagnostics for invalid untyped file: ${diagnostic.length}`);
+
+      // Assert that there are no diagnostics for the valid untyped file
+      assert.ok(
+        diagnostic.length > 0,
+        `Expected diagnostics for invalid untyped file, but got ${diagnostic.length}`,
+      );
+
+      // Assert that the diagnostic message contains "Syntax error:"
+      const content = diagnostic[0].message;
+      assert.ok(
+        content.includes("Syntax error:"),
+        `Expected diagnostic message to include "Syntax error:", but got: ${content}`,
+      );
+    });
+
+    test("Invalid Typed File - Reports type error", async () => {
+      let doc = await openDoc(files.invalidTyped);
+      await waitForDiagnostics(doc.uri);
+
+      const diagnostic = vscode.languages.getDiagnostics(doc.uri);
+
+      // console.log(`Diagnostics for invalid typed file: ${diagnostic.length}`);
+
+      // Assert that there are no diagnostics for the valid untyped file
+      assert.ok(
+        diagnostic.length > 0,
+        `Expected diagnostics for invalid typed file, but got ${diagnostic.length}`,
+      );
+
+      // Assert that the diagnostic message contains "Type error:"
+      const content = diagnostic[0].message;
+      assert.ok(
+        content.includes("Type error:"),
+        `Expected diagnostic message to include "Type error:", but got: ${content}`,
+      );
+    });
+  });
+
+  suite("Hover", () => {
+    test("Typed variable - Shows type Information", async () => {
+      const doc = await openDoc(files.validTyped);
+      await waitForDiagnostics(doc.uri, 0);
+
+      const pos = new vscode.Position(1, 3); // Position over 'b' variable
+      const hover = await vscode.commands.executeCommand<vscode.Hover[]>(
+        "vscode.executeHoverProvider",
+        doc.uri,
+        pos,
+      );
+
+      // Check that hover information is returned
+      assert.ok(hover.length > 0, "Expected hover information but got none");
+
+      const contents = hover[0].contents
+        .map((c) => (typeof c === "string" ? c : (c as vscode.MarkdownString).value))
+        .join(" ");
+
+      // console.log("Hover contents:", contents);
+
+      // Check that the hover information includes the type of variable 'b'
+      assert.ok(
+        contents.includes("in b: Int"),
+        "Hover information should include the type of variable 'b', but got: " + contents,
+      );
+
+      // Check that the hover information also includes the description of input stream
+      assert.ok(
+        contents.includes("Declares an input stream"),
+        "Hover information should include the description of variable 'b', but got: " + contents,
+      );
+    });
+
+    test("Function - Shows function information", async () => {
+      const doc = await openDoc(files.validTyped);
+      await waitForDiagnostics(doc.uri, 0);
+
+      const editor = await vscode.window.showTextDocument(doc);
+      await editor.edit((editBuilder) => {
+        editBuilder.delete(new vscode.Range(new vscode.Position(3, 8), new vscode.Position(3, 9)));
+        editBuilder.insert(new vscode.Position(3, 7), " abs(a)");
+      });
+
+      // await sleep(10000);
+
+      const pos = new vscode.Position(3, 9);
+      const hover = await vscode.commands.executeCommand<vscode.Hover[]>(
+        "vscode.executeHoverProvider",
+        doc.uri,
+        pos,
+      );
+
+      // Check that hover information is returned
+      assert.ok(hover.length > 0, "Expected hover information but got none");
+
+      const contents = hover[0].contents
+        .map((c) => (typeof c === "string" ? c : (c as vscode.MarkdownString).value))
+        .join(" ");
+
+      // console.log("Hover contents for function:", contents);
+
+      // Check that the hover information includes the function signature of abs
+      assert.ok(
+        contents.includes("abs(e)"),
+        "Expected hover information to include function signature 'abs(e)', but got: " + contents,
+      );
+
+      // Check that the hover information also includes the description of abs
+      assert.ok(
+        contents.includes("Returns the absolute value of the expression"),
+        "Expected hover information to include function description, but got: " + contents,
+      );
+    });
+  });
+
+  suite("Auto Completion", () => {
+    test("Provides functions suggestion in scope", async () => {
+      const doc = await openDoc(files.invalidUntyped);
+      const editor = await vscode.window.showTextDocument(doc);
+
+      await waitForDiagnostics(doc.uri, 1);
+
+      await editor.edit((editBuidler) => {
+        editBuidler.insert(new vscode.Position(3, 11), "d");
+      });
+
+      await sleep(100); // Wait for the textDocument/didChange event to sync with the Rust server
+
+      const pos = new vscode.Position(3, 12);
+
+      const completions = await vscode.commands.executeCommand<
+        vscode.CompletionList | vscode.CompletionItem[]
+      >("vscode.executeCompletionItemProvider", doc.uri, pos);
+
+      const items = Array.isArray(completions) ? completions : completions.items;
+
+      assert.ok(
+        items.length >= 1,
+        "Should provide at least one completion suggestion but got " + items.length,
+      );
+
+      const labels = items.map((item) =>
+        typeof item.label === "string" ? item.label : item.label.label,
+      );
+
+      // Check that it includes 'default' as a suggestion, as the editor add a d and therefore the function 'default' should be suggested
+      assert.ok(
+        labels.includes("default"),
+        "Completion suggestions should include 'default' for scope, but got: " + labels.join(", "),
+      );
+    });
   });
 });
 
-// Helper function to wait for the language server to process files
+// Helper Functions
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function waitForDiagnostics(uri: vscode.Uri, timeout = 3000) {
+// Wait for diagnostics to appear for a given document URI, optionally checking for an expected count of diagnostics
+async function waitForDiagnostics(uri: vscode.Uri, expectedCount?: number, timeout = 5000) {
   const start = Date.now();
 
   while (Date.now() - start < timeout) {
     const diags = vscode.languages.getDiagnostics(uri);
-    if (diags && diags.length > 0) {
-      return;
+
+    if (expectedCount !== undefined) {
+      if (diags.length === expectedCount) return;
+    } else {
+      if (diags.length > 0) return;
     }
     await sleep(100);
   }
-
-  throw new Error("Timed out waiting for diagnostics");
+  throw new Error(`Timed out waiting for diagnostics (expected: ${expectedCount})`);
+}
+// Helper function to open a document and show it in the editor
+async function openDoc(file: string) {
+  const doc = await vscode.workspace.openTextDocument(vscode.Uri.file(file));
+  await vscode.window.showTextDocument(doc);
+  return doc;
 }

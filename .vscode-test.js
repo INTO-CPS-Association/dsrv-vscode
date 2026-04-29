@@ -11,6 +11,7 @@ module.exports = defineConfig([
       // "--info",
       "--disable-gpu",
       // "--enable-unsafe-swiftshader",
+      "--disable-software-rasterizer"
     ],
     mocha: {
       ui: "tdd",
