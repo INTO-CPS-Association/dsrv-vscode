@@ -17,11 +17,11 @@ While the language server is fully functional without any additional dependencie
 This extension contributes the following settings:
 * `dsrv.binaryPath`: (Optional) Provide the path to the trustworthiness checker executable to enable code running capabilities in the extension. If not provided, the code running features will not work
 
-## Release Notes
-For detailed release notes, please see the [CHANGELOG.md](CHANGELOG.md) file in the project repository.
+<!-- ## Release Notes -->
+<!-- For detailed release notes, please see the [CHANGELOG.md](CHANGELOG.md) file in the project repository. -->
 
 ---
 
 
 ## License
-The project is licensed under GPL-3.0. For more details, please see the [LICENSE](LICENSE.md) file in the project repository.
+The project is licensed under GPL-3.0. For more details, please see the [LICENSE](LICENSE) file in the project repository.
