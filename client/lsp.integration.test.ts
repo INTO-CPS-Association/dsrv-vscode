@@ -166,8 +166,6 @@ suite("Language Server Integration Test Suite", () => {
         editBuilder.insert(new vscode.Position(3, 7), " abs(a)");
       });
 
-      // await sleep(10000);
-
       const pos = new vscode.Position(3, 9);
       const hover = await vscode.commands.executeCommand<vscode.Hover[]>(
         "vscode.executeHoverProvider",
