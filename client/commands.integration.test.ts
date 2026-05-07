@@ -38,18 +38,9 @@ suite("Commands Integration Test Suite", () => {
     // Ensure no active editor
     await vscode.commands.executeCommand("workbench.action.closeAllEditors");
 
-    assert.doesNotThrow(
-      () => command.runSimpleCommand(),
-      "runSimpleCommand should not throw",
-    );
-    assert.doesNotThrow(
-      () => command.runWithTypes(),
-      "runWithTypes should not throw",
-    );
-    await assert.doesNotReject(
-      command.runWithInput(),
-      "runWithInput should not reject",
-    );
+    assert.doesNotThrow(() => command.runSimpleCommand(), "runSimpleCommand should not throw");
+    assert.doesNotThrow(() => command.runWithTypes(), "runWithTypes should not throw");
+    await assert.doesNotReject(command.runWithInput(), "runWithInput should not reject");
     await assert.doesNotReject(
       command.runWithInputAndTypes(),
       "runWithInputAndTypes should not reject",
@@ -57,14 +48,12 @@ suite("Commands Integration Test Suite", () => {
   });
 
   test("Test Run simple Command", async () => {
-    const doc = await vscode.workspace.openTextDocument(
-      vscode.Uri.file(tmpFile),
-    );
+    const doc = await vscode.workspace.openTextDocument(vscode.Uri.file(tmpFile));
     await vscode.window.showTextDocument(doc);
-    
+
     const initialTerminal = vscode.window.terminals.length;
     command.runSimpleCommand();
-    
+
     assert.ok(
       vscode.window.terminals.length >= initialTerminal,
       "Terminal should be created or reused",
@@ -72,9 +61,7 @@ suite("Commands Integration Test Suite", () => {
   });
 
   test("Test command with typed", async () => {
-    const doc = await vscode.workspace.openTextDocument(
-      vscode.Uri.file(tmpFile),
-    );
+    const doc = await vscode.workspace.openTextDocument(vscode.Uri.file(tmpFile));
     await vscode.window.showTextDocument(doc);
 
     const initialTerminal = vscode.window.terminals.length;
@@ -86,4 +73,3 @@ suite("Commands Integration Test Suite", () => {
     );
   });
 });
-
