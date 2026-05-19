@@ -72,10 +72,7 @@ suite("Language Server Integration Test Suite", () => {
     test("Invalid Untyped File - Report syntax error", async () => {
       let doc = await openDoc(files.invalidUntyped);
       await waitForDiagnostics(doc.uri);
-
       const diagnostic = vscode.languages.getDiagnostics(doc.uri);
-
-      // console.log(`Diagnostics for invalid untyped file: ${diagnostic.length}`);
 
       // Assert that there are no diagnostics for the valid untyped file
       assert.ok(
