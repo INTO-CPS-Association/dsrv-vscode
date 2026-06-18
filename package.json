@@ -15,12 +15,6 @@
   "keywords": [
     "dsrv"
   ],
-  "files": [
-    "dist",
-    "syntaxes",
-    "assets",
-    "language-configuration.json"
-  ],
   "categories": [
     "Programming Languages"
   ],
