@@ -6,13 +6,19 @@
       "include": "#comment"
     },
     {
-      "include": "#keywords"
-    },
-    {
       "include": "#strings"
     },
     {
+      "include": "#types"
+    },
+    {
+      "include": "#keywords"
+    },
+    {
       "include": "#constants"
+    },
+    {
+      "include": "#numbers"
     },
     {
       "include": "#support"
@@ -21,15 +27,65 @@
       "include": "#storage"
     },
     {
+      "include": "#properties"
+    },
+    {
       "include": "#punctuation"
     }
   ],
   "repository": {
+    "types": {
+      "patterns": [
+        {
+          "name": "meta.type.generic.dsrv",
+          "begin": "\\b(Struct|List|Map)\\b\\s*(<)",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.type.builtin.dsrv"
+            },
+            "2": {
+              "name": "punctuation.definition.generic.begin.dsrv"
+            }
+          },
+          "end": ">",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.generic.end.dsrv"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#types"
+            },
+            {
+              "name": "keyword.operator.ellipsis.dsrv",
+              "match": "\\.\\.\\."
+            },
+            {
+              "name": "variable.other.member.dsrv",
+              "match": "\\b[A-Za-z_][A-Za-z0-9_]*\\b(?=\\s*:)"
+            },
+            {
+              "name": "punctuation.separator.dsrv",
+              "match": "[,:]"
+            }
+          ]
+        },
+        {
+          "name": "storage.type.builtin.dsrv",
+          "match": "\\b(Int|Float|Bool|Str|Unit|List|Map|Struct)\\b"
+        }
+      ]
+    },
     "keywords": {
       "patterns": [
         {
           "name": "keyword.control.dsrv",
           "match": "\\b(if|then|else)\\b"
+        },
+        {
+          "name": "keyword.operator.ellipsis.dsrv",
+          "match": "\\.\\.\\."
         },
         {
           "name": "keyword.operator.stringOps.dsrv",
@@ -41,7 +97,7 @@
         },
         {
           "name": "keyword.operator.comparison.dsrv",
-          "match": "(==|<=|>=|<|>)"
+          "match": "(!=|==|<=|>=|<|>)"
         },
         {
           "name": "keyword.operator.arithmetic.dsrv",
@@ -65,8 +121,24 @@
       ]
     },
     "constants": {
-      "name": "constant.language.boolean.dsrv",
-      "match": "\\b(true|false)\\b"
+      "patterns": [
+        {
+          "name": "constant.language.boolean.dsrv",
+          "match": "\\b(true|false)\\b"
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.float.dsrv",
+          "match": "\\b[0-9]+\\.[0-9]+\\b"
+        },
+        {
+          "name": "constant.numeric.integer.dsrv",
+          "match": "\\b[0-9]+\\b"
+        }
+      ]
     },
     "comment": {
       "patterns": [
@@ -110,7 +182,19 @@
         },
         {
           "name": "storage.type.builtin.dsrv",
-          "match": "\\b(Int|Float|Bool|Str|Unit)\\b"
+          "match": "\\b(Int|Float|Bool|Str|Unit|List|Map|Struct)\\b"
+        }
+      ]
+    },
+    "properties": {
+      "patterns": [
+        {
+          "name": "variable.other.property.dsrv",
+          "match": "(?<=\\.)[A-Za-z_][A-Za-z0-9_]*\\b"
+        },
+        {
+          "name": "variable.other.member.dsrv",
+          "match": "\\b[A-Za-z_][A-Za-z0-9_]*\\b(?=\\s*:)"
         }
       ]
     },
@@ -119,6 +203,14 @@
         {
           "name": "punctuation.separator.dsrv",
           "match": "[,:]"
+        },
+        {
+          "name": "punctuation.accessor.dsrv",
+          "match": "\\."
+        },
+        {
+          "name": "punctuation.definition.generic.dsrv",
+          "match": "[<>]"
         },
         {
           "name": "punctuation.section.brackets.dsrv",
