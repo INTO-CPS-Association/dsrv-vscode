@@ -1,22 +1,31 @@
 import * as assert from 'assert';
 import { suite, test } from 'mocha';
 import * as extension from '../extension';
+import * as vscode from 'vscode';
 
 suite('Extension Unit Test Suite', () => {
   test('deactivate should execute without throwing', () => {
     assert.doesNotThrow(() => extension.deactivate());
   });
 
-  test('activate should throw if dsrv-lsp binary is missing', () => {
-    // Create a mock ExtensionContext that returns a guaranteed non-existent path
-    // This makes the real fs.existsSync naturally return false.
-    const mockContext: any = {
-      subscriptions: [],
-      asAbsolutePath: (p: string) => `/path/that/definitely/does/not/exist/${p}`
-    };
+  test('activate registers the language client and commands', async () => {
+    const expectedCommands = [
+      'DSRV.runCurrentFile',
+      'DSRV.runWithInput',
+      'DSRV.runWithTypes',
+      'DSRV.runWithInputAndTypes',
+    ];
+    let commands = await vscode.commands.getCommands(true);
 
-    assert.throws(() => {
-      extension.activate(mockContext);
-    }, /Could not find dsrv-lsp/);
+    if (!expectedCommands.every((command) => commands.includes(command))) {
+      const mockContext: any = { subscriptions: [] };
+      assert.doesNotThrow(() => extension.activate(mockContext));
+      assert.ok(mockContext.subscriptions.length >= 5);
+      commands = await vscode.commands.getCommands(true);
+    }
+
+    for (const command of expectedCommands) {
+      assert.ok(commands.includes(command), `Expected ${command} to be registered`);
+    }
   });
 });

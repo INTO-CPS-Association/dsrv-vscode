@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
 import { getChannel, initLogger, log, show } from './client/src/logger';
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, Trace } from 'vscode-languageclient/node';
 import { runSimpleCommand, runWithInput, runWithInputAndTypes, runWithTypes } from './client/src/commands';
@@ -24,7 +25,11 @@ export function activate(context: vscode.ExtensionContext): void {
   };
 
   client = new LanguageClient('dsrv-lsp', 'DSRV LSP', serverOptions, clientOptions);
-  client.start();
+  void client.start().catch((error: unknown) => {
+    const message = error instanceof Error ? error.message : String(error);
+    log(`Failed to start dsrv-lsp: ${message}`);
+    void vscode.window.showErrorMessage(`Failed to start dsrv-lsp: ${message}`);
+  });
   client.setTrace(Trace.Verbose);
   context.subscriptions.push(client);
 
@@ -38,9 +43,25 @@ export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(...commands);
 }
 
-export function deactivate() { }
+export function deactivate(): Thenable<void> | undefined {
+  return client?.stop();
+}
 
 function resolveServerExe(): string {
   const configuredPath = vscode.workspace.getConfiguration('DSRV').get<string>('lspPath')?.trim();
-  return configuredPath || 'dsrv-lsp';
+  if (!configuredPath) {
+    return 'dsrv-lsp';
+  }
+
+  const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+  const isPath =
+    path.isAbsolute(configuredPath) ||
+    configuredPath.startsWith('./') ||
+    configuredPath.startsWith('../') ||
+    configuredPath.includes('/') ||
+    configuredPath.includes('\\');
+
+  return workspaceRoot && isPath
+    ? path.resolve(workspaceRoot, configuredPath)
+    : configuredPath;
 }

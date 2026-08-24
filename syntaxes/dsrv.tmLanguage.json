@@ -1,12 +1,16 @@
 {
   "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
   "name": "DSRV",
+  "scopeName": "source.dsrv",
   "patterns": [
     {
       "include": "#comment"
     },
     {
       "include": "#strings"
+    },
+    {
+      "include": "#support"
     },
     {
       "include": "#types"
@@ -19,9 +23,6 @@
     },
     {
       "include": "#numbers"
-    },
-    {
-      "include": "#support"
     },
     {
       "include": "#storage"
@@ -38,7 +39,7 @@
       "patterns": [
         {
           "name": "meta.type.generic.dsrv",
-          "begin": "\\b(Struct|List|Map)\\b\\s*(<)",
+          "begin": "\\b(List|Map|Struct)\\b\\s*(<)",
           "beginCaptures": {
             "1": {
               "name": "storage.type.builtin.dsrv"
@@ -73,7 +74,7 @@
         },
         {
           "name": "storage.type.builtin.dsrv",
-          "match": "\\b(Int|Float|Bool|Str|Unit|List|Map|Struct)\\b"
+          "match": "\\b(Int|Float|Bool|Str|Unit|Any|List|Map|Struct)\\b"
         }
       ]
     },
@@ -96,8 +97,12 @@
           "match": "(\\&\\&|\\|\\||!|=>)"
         },
         {
+          "name": "keyword.operator.lambda.dsrv",
+          "match": "->|\\\\"
+        },
+        {
           "name": "keyword.operator.comparison.dsrv",
-          "match": "(!=|==|<=|>=|<|>)"
+          "match": "(==|<=|>=|<|>)"
         },
         {
           "name": "keyword.operator.arithmetic.dsrv",
@@ -132,7 +137,7 @@
       "patterns": [
         {
           "name": "constant.numeric.float.dsrv",
-          "match": "\\b[0-9]+\\.[0-9]+\\b"
+          "match": "\\b(?:0|[1-9][0-9]*)\\.[0-9]*(?:[eE]-?[0-9]+)?(?![A-Za-z0-9_])"
         },
         {
           "name": "constant.numeric.integer.dsrv",
@@ -158,19 +163,23 @@
       "patterns": [
         {
           "name": "support.function.builtin.dsrv",
-          "match": "\\b(defer|update|is_defined|when|latch|dynamic|eval|default|init|monitored_at|dist)\\b(?=\\()"
+          "match": "\\b(defer|update|is_defined|when|latch|dynamic|eval|default|init|fix|partial|monitored_at|dist)\\b(?=\\s*\\()"
         },
         {
           "name": "support.function.math.dsrv",
-          "match": "\\b(sin|cos|tan|abs)\\b(?=\\()"
+          "match": "\\b(sin|cos|tan|abs)\\b(?=\\s*\\()"
         },
         {
           "name": "support.function.list.dsrv",
-          "match": "\\bList\\.(get|append|concat|head|tail|len)\\b(?=\\()"
+          "match": "\\bList\\.(get|append|concat|head|tail|len|map|filter|fold)\\b(?=\\s*\\()"
         },
         {
           "name": "support.function.map.dsrv",
-          "match": "\\bMap\\.(get|insert|remove|has_key)\\b(?=\\()"
+          "match": "\\bMap\\.(get|insert|remove|has_key)\\b(?=\\s*\\()"
+        },
+        {
+          "name": "support.function.constructor.dsrv",
+          "match": "\\b(List|Tuple|Map|Struct)\\b(?=\\s*\\()"
         }
       ]
     },
@@ -182,7 +191,7 @@
         },
         {
           "name": "storage.type.builtin.dsrv",
-          "match": "\\b(Int|Float|Bool|Str|Unit|List|Map|Struct)\\b"
+          "match": "\\b(Int|Float|Bool|Str|Unit|Any|List|Map|Struct)\\b"
         }
       ]
     },
@@ -218,6 +227,5 @@
         }
       ]
     }
-  },
-  "scopeName": "source.dsrv"
+  }
 }

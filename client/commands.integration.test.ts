@@ -7,20 +7,13 @@ import path from "path";
 import * as fs from "fs";
 
 suite("Commands Integration Test Suite", () => {
-  let originalConfig: vscode.WorkspaceConfiguration;
   const tmpDir = os.tmpdir();
   const tmpFile = path.join(tmpDir, "test_model.dsrv");
   const tmpInput = path.join(tmpDir, "test_model.input");
 
   setup(async () => {
-    originalConfig = vscode.workspace.getConfiguration("DSRV");
     fs.writeFileSync(tmpFile, "in a: Int\nin b: Int\nout c: Int\nc = a + b");
     fs.writeFileSync(tmpInput, "0: x = 1\ny = 2\n1: x = 2\ny = 3\n2: x = 3\ny = 4");
-    await originalConfig.update(
-      "binaryPath",
-      "/home/emili/projects/robosapiens-trustworthiness-checker/target/release/trustworthiness_checker",
-      vscode.ConfigurationTarget.Global,
-    );
   });
 
   teardown(async () => {
@@ -32,6 +25,20 @@ suite("Commands Integration Test Suite", () => {
   test("test getBinaryPath", () => {
     const binPath = command.getBinaryPath();
     assert.ok(binPath.length > 0, "Binary path should not be empty");
+  });
+
+  test("builds the current checker CLI command", () => {
+    const built = command.buildCommand(
+      "/opt/trustworthiness_checker",
+      "/tmp/model.dsrv",
+      "/tmp/model.input",
+      "typed-untimed",
+    );
+
+    assert.ok(built.includes("--input-file '/tmp/model.input'"));
+    assert.ok(built.includes("--semantics typed-untimed"));
+    assert.ok(built.includes("--output-stdout"));
+    assert.ok(!built.includes("--parser"));
   });
 
   test("test commands no active editor", async () => {

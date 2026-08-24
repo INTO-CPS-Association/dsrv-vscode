@@ -1,4 +1,26 @@
------ keywords -----
+----- Declarations -----
+in
+out
+aux
+var
+
+----- Built-in types -----
+Int
+Float
+Bool
+Str
+Unit
+Any
+List
+Map
+Struct
+
+----- Literals -----
+true
+false
+()
+
+----- Built-in functions and constructors -----
 defer()
 update()
 is_defined()
@@ -8,91 +30,67 @@ dynamic()
 eval()
 default()
 init()
-
-
-
------ Built-in Types?? -----
-Int
-Float
-Bool
-Str
-Unit
-
------ Built-in Constants -----
-true
-false
-
------ Arithmics -----
-+ (additions)
-- (subtraction)
-* (multiplication)
-/ (division)
-% (modulus)
-
-
------ Comparison -----
-== (equal)
-< (less than)
-> (greater than)
-<= (less than or equal)
->= (greater than or equal)
-
-
------ Logical Operations -----
-&& (and)
-|| (or)
-! (not)
-=> (implies)
-
-
------ String Operations -----
-++ (string concatenation)
-
-
------ control Flow -----
-if
-then
-else
-
-
------ Declaration -----
-in 
-out
-aux
-var
-
-
------ Math functions -----
-sin()
-cos()
-tan()
-abs()
-
-
------ List Functions -----
+fix()
+partial()
+Tuple()
 List()
+Struct()
+Map()
+
+----- List functions -----
 List.get()
 List.append()
 List.concat()
 List.head()
 List.tail()
 List.len()
+List.map()
+List.filter()
+List.fold()
 
-
------ Map Functions ------
-Map()
+----- Map functions -----
 Map.get()
 Map.insert()
 Map.remove()
 Map.has_key()
 
-
------ other Operations -----
+----- Math and distributed functions -----
+sin()
+cos()
+tan()
+abs()
 monitored_at()
 dist()
 
+----- Control flow -----
+if
+then
+else
+
+----- Operators -----
++
+-
+*
+/
+%
+==
+<
+>
+<=
+>=
+&&
+||
+!
+=>
+++
+->
+\\
 
 ----- Punctuation -----
-: (used in maps)
-{} (used in var sets)
-[] (used for time indexing)
+:
+.
+,
+...
+{}
+[]
+()

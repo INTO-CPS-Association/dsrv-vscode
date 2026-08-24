@@ -19,7 +19,9 @@
     "Programming Languages"
   ],
   "main": "./dist/extension.js",
-  "activationEvents": [],
+  "activationEvents": [
+    "onLanguage:dsrv"
+  ],
   "contributes": {
     "languages": [
       {
@@ -50,8 +52,8 @@
       "properties": {
         "DSRV.binaryPath": {
           "type": "string",
-          "default": "",
-          "description": "Path to the executable of the trustworthiness checker",
+          "default": "./target/release/trustworthiness_checker",
+          "description": "Path to the trustworthiness_checker executable. Relative paths are resolved from the workspace; a bare command name is resolved from PATH.",
           "scope": "resource"
         },
         "DSRV.lspPath": {
