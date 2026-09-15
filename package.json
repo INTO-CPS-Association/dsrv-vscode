@@ -129,7 +129,8 @@
     "build-base": "node esbuild.js",
     "package": "vsce package",
     "check-types": "tsc --noEmit",
-    "watch": "npm run build-base -- --sourcemap --watch",
+    "watch:esbuild": "npm run build-base -- --sourcemap --watch",
+    "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
     "lint": "eslint client/src extension.ts"
   },
   "devDependencies": {

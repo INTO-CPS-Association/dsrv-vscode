@@ -28,34 +28,11 @@ npm install
 npm run build
 ```
 
-### 2. Add the launch configuration
+### 2. Launch the extension
 
-Create `.vscode/launch.json` in the project root:
+Open the `dsrv-vscode` folder in VS Code, open the Run and Debug panel (`Ctrl+Shift+D`), select **Run Extension**, and press **F5**. The launch configuration is committed to the repository, so no manual setup is needed. A second VS Code window—the Extension Development Host—will open with the extension loaded.
 
-```json
-{
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Run Extension",
-            "type": "extensionHost",
-            "request": "launch",
-            "args": [
-                "--extensionDevelopmentPath=${workspaceFolder}"
-            ],
-            "outFiles": [
-                "${workspaceFolder}/dist/**/*.js"
-            ]
-        }
-    ]
-}
-```
-
-### 3. Launch the extension
-
-Open the `dsrv-vscode` folder in VS Code, open the Run and Debug panel (`Ctrl+Shift+D`), select **Run Extension**, and press **F5**. A second VS Code window—the Extension Development Host—will open with the extension loaded.
-
-### 4. Configure binary paths
+### 3. Configure binary paths
 
 In the Extension Development Host window, go to **File → Preferences → Settings** (`Ctrl+,`) and search for `DSRV`. Configure these paths as needed:
 
@@ -65,6 +42,8 @@ In the Extension Development Host window, go to **File → Preferences → Setti
 | `DSRV: Binary Path` | Path to the `trustworthiness_checker` binary, or a command available on `PATH` |
 
 If `dsrv-lsp` is on your system `PATH`, leave `DSRV: Lsp Path` empty. The trustworthiness checker defaults to `./target/release/trustworthiness_checker` relative to the workspace root if `DSRV: Binary Path` is not set.
+
+For the full development environment setup, including prerequisites and troubleshooting, see [CONTRIBUTING](CONTRIBUTING.md).
 
 ## Running DSRV Code
 

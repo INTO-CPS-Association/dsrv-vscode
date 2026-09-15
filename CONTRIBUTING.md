@@ -21,7 +21,7 @@ This project currently only works in **Linux environments**.
 This limitation is due to dependencies from the *Robosapiens Trustworthiness Checker*.
 
 
-## Quick Start
+## 1. Quick Start
 
 ```bash
 # Clone your fork
@@ -106,9 +106,8 @@ npm install
 
 ## Project Structure
 
-* **Rust** -> Backend/native components compiled with Cargo
-* **TypeScript** -> VS Code extension frontend
-* The extension uses compiled Rust binaries at runtime
+* **TypeScript** -> the VS Code extension itself (this repository)
+* **Rust** -> the language server ([dsrv-lsp])(https://github.com/INTO-CPS-Association/dsrv-lsp) and the [trustworthiness checker](https://github.com/INTO-CPS-Association/robosapiens-trustworthiness-checker), both built and istalled separately
 
 
 ## 3. Building and Running the Extension
@@ -129,13 +128,14 @@ Or run scripts directly from the **NPM Scripts** section in VS Code under the **
 
 ### Important Scripts
 
-* `build` ->Production build (Rust + TypeScript)
-* `build-debug` -> Development build (recommended)
-* `build-rust` / `build-rust-debug` -> Rust only
-* `build-base` -> TypeScript only
-* `watch` -> Rebuild TypeScript on changes
-* `test:ts` -> Run TypeScript tests
-* `test:rust` -> Run Rust tests
+* `build` -> Bundle the extension with esbuild
+* `build-base` -> Same, without source maps
+* `watch:esbuild` -> Rebuild the bundle on changes
+* `watch:tsc` -> Type-check on changes
+* `check-types` -> One-off type check
+* `test:ts` -> Build and run the extension tests
+* `lint` -> Run ESLint
+* `package` -> Produce a .vsix package
 
 ---
 
@@ -150,16 +150,13 @@ npm run build-debug
 This will generate:
 
 * `dist/` → Compiled TypeScript (JavaScript output)
-* `target/debug` or `target/release` → Compiled Rust binaries
 
 ---
 
 ### Running the Extension
 
 1. Open the project in VS Code
-2. Open `extension.ts`
-3. Press **F5**
-4. Select **"VS Code Extension Development"**
+2. Press **F5** (or select **Run Extension** in the Run and Debug panel)
 
 This launches a new VS Code window with the extension loaded.
 
@@ -171,12 +168,11 @@ Run tests using:
 
 ```bash
 npm run test:ts
-npm run test:rust
 ```
 This will generate:
 * `.vscode-test` → Test environment for TypeScript tests
 
-> Make sure the typescript project is built before running tests. The rust tests will automatically build the Rust code if needed.
+> Make sure the typescript project is built before running tests.
 
 ---
 

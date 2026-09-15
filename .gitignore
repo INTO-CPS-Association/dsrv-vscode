@@ -4,10 +4,13 @@ node_modules
 .vscode-test/
 *.vsix
 notes.txt
-.vscode
-.vscode/settings.json
 
-.vscodeignore
+# Keep the shared editor configuration, ignore anything else under .vscode/
+.vscode/*
+!.vscode/launch.json
+!.vscode/tasks.json
+!.vscode/extensions.json
+!.vscode/settings.json
 
 # Added by cargo
 /server/target/

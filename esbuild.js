@@ -12,7 +12,7 @@ const esbuildProblemMatcherPlugin = {
 
   setup(build) {
     build.onStart(() => {
-      console.log("[build] started");
+      console.log("[watch] build started");
     });
     build.onEnd((result) => {
       result.errors.forEach(({ text, location }) => {
@@ -21,7 +21,7 @@ const esbuildProblemMatcherPlugin = {
           `    ${location.file}:${location.line}:${location.column}:`,
         );
       });
-      console.log("[build] finished");
+      console.log("[watch] build finished");
     });
   },
 };
