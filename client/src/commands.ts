@@ -1,31 +1,20 @@
 import * as vscode from "vscode";
-import * as path from "path";
 import * as fs from "fs";
-
-const DEFAULT_BINARY_PATH = "./target/release/trustworthiness_checker";
+import { resolveBinary, settingId, updateSetting } from "./binaries";
 
 export type DsrvSemantics = "untimed" | "typed-untimed";
 
 export function getBinaryPath(): string {
-  const configuredPath = vscode.workspace
-    .getConfiguration("DSRV")
-    .get<string>("binaryPath")
-    ?.trim();
-  const binaryPath = configuredPath || DEFAULT_BINARY_PATH;
-  const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+  return resolveBinary("trustworthiness_checker").command;
+}
 
-  if (
-    workspaceRoot &&
-    !path.isAbsolute(binaryPath) &&
-    (binaryPath.startsWith("./") ||
-      binaryPath.startsWith("../") ||
-      binaryPath.includes("/") ||
-      binaryPath.includes("\\"))
-  ) {
-    return path.resolve(workspaceRoot, binaryPath);
+let dsrvTerminal: vscode.Terminal | undefined;
+
+function getDsrvTerminal(): vscode.Terminal {
+  if (!dsrvTerminal || dsrvTerminal.exitStatus !== undefined) {
+    dsrvTerminal = vscode.window.createTerminal("DSRV");
   }
-
-  return binaryPath;
+  return dsrvTerminal;
 }
 
 export function shellQuote(value: string): string {
@@ -56,10 +45,41 @@ export function executeCommand(
   inputFile: string,
   semantics: DsrvSemantics = "untimed",
 ): void {
-  const terminal =
-    vscode.window.activeTerminal || vscode.window.createTerminal("DSRV Terminal");
+  const checker = resolveBinary("trustworthiness_checker");
+
+  if (checker.exists === false) {
+    void reportMissingChecker(checker.command);
+    return;
+  }
+
+  const terminal = getDsrvTerminal();
   terminal.show();
-  terminal.sendText(buildCommand(getBinaryPath(), modelFile, inputFile, semantics));
+  terminal.sendText(buildCommand(checker.command, modelFile, inputFile, semantics));
+}
+
+async function reportMissingChecker(attempted: string): Promise<void> {
+  const choice = await vscode.window.showErrorMessage(
+    `Could not find the trustworthiness checker at ${attempted}.`,
+    "Locate binary...",
+    "Open settings",
+  );
+
+  if (choice === "Locate binary...") {
+    const picked = await vscode.window.showOpenDialog({
+      openLabel: "Select the trustworthiness_checker executable",
+      canSelectFiles: true,
+      canSelectFolders: true,
+      canSelectMany: false,
+    });
+    if (picked?.[0]) {
+      await updateSetting("trustworthiness_checker", picked[0].fsPath);
+    }
+  } else if (choice === "Open settings") {
+    void vscode.commands.executeCommand(
+      "workbench.action.openSettings",
+      settingId("trustworthiness_checker"),
+    );
+  }
 }
 
 function currentFilePath(): string | undefined {

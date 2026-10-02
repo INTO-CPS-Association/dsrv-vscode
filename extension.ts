@@ -3,18 +3,21 @@ import * as path from 'path';
 import { getChannel, initLogger, log, show } from './client/src/logger';
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, Trace } from 'vscode-languageclient/node';
 import { runSimpleCommand, runWithInput, runWithInputAndTypes, runWithTypes } from './client/src/commands';
+import { initBinaries, resolveBinary } from './client/src/binaries';
 
 let client: LanguageClient;
 
 export function activate(context: vscode.ExtensionContext): void {
   initLogger('DSRV');
+  initBinaries(context);
   log('DSRV extension activated');
   show();
 
   const outputChannel = getChannel();
 
+  const lsp = resolveBinary('dsrv-lsp');
   const serverOptions: ServerOptions = {
-    command: resolveServerExe(),
+    command: lsp.command,
     args: [],
     transport: TransportKind.stdio,
   };
@@ -45,23 +48,4 @@ export function activate(context: vscode.ExtensionContext): void {
 
 export function deactivate(): Thenable<void> | undefined {
   return client?.stop();
-}
-
-function resolveServerExe(): string {
-  const configuredPath = vscode.workspace.getConfiguration('DSRV').get<string>('lspPath')?.trim();
-  if (!configuredPath) {
-    return 'dsrv-lsp';
-  }
-
-  const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
-  const isPath =
-    path.isAbsolute(configuredPath) ||
-    configuredPath.startsWith('./') ||
-    configuredPath.startsWith('../') ||
-    configuredPath.includes('/') ||
-    configuredPath.includes('\\');
-
-  return workspaceRoot && isPath
-    ? path.resolve(workspaceRoot, configuredPath)
-    : configuredPath;
 }
