@@ -1,22 +1,32 @@
 {
   "name": "dsrv-vscode",
-  "displayName": "DSRV Language Support for VSCode",
-  "description": "VSCode extension for DSRV language support",
-  "version": "0.0.1",
+  "displayName": "DSRV Language Support",
+  "description": "Language support for the RoboSAPIENS trustworthiness checker. Includes syntax highlighting, completion, diagnostics, and testing support for DSRV runtime verification specifications.",
+  "version": "1.0.0",
+  "publisher": "intocps",
   "repository": {
     "url": "https://github.com/INTO-CPS-Association/dsrv-vscode.git",
     "type": "git"
   },
-  "icon": "./assets/favicon-32x32.png",
+  "icon": "./assets/robosapiens-monitor-128.png",
   "license": "GPL-3.0-only",
   "engines": {
     "vscode": "^1.107.0"
   },
   "keywords": [
-    "dsrv"
+    "dsrv",
+    "runtime verification",
+    "runtime monitoring",
+    "stream runtime verification",
+    "formal methods",
+    "cyber-physical systems",
+    "robotics",
+    "trustworthiness checker",
+    "robosapiens"
   ],
   "categories": [
-    "Programming Languages"
+    "Programming Languages",
+    "Linters"
   ],
   "main": "./dist/extension.js",
   "activationEvents": [
@@ -31,8 +41,8 @@
           "dsrv"
         ],
         "icon": {
-          "light": "./assets/favicon-32x32.png",
-          "dark": "./assets/favicon-32x32.png"
+          "light": "./assets/robosapiens-monitor-32.png",
+          "dark": "./assets/robosapiens-monitor-32.png"
         },
         "extensions": [
           ".dsrv"
@@ -52,15 +62,15 @@
       "properties": {
         "DSRV.binaryPath": {
           "type": "string",
-          "default": "./target/release/trustworthiness_checker",
-          "description": "Path to the trustworthiness_checker executable. Relative paths are resolved from the workspace; a bare command name is resolved from PATH.",
-          "scope": "resource"
+          "default": "",
+          "markdownDescription": "Path to the `trustworthiness_checker` executable. May be a file, a directory to search, or a command available on `PATH`. Relative paths are resolved from the workspace root. When empty, the copy bundled with the extension is used, falling back to `PATH`",
+          "scope": "machine-overridable"
         },
         "DSRV.lspPath": {
           "type": "string",
           "default": "",
-          "description": "Path to the dsrv-lsp executable. If empty, dsrv-lsp is resolved from PATH.",
-          "scope": "resource"
+          "description": "Path to the `dsrv-lsp` executable. Same resolution rules as `#DSRV.binaryPath#`.",
+          "scope": "machine-overridable"
         }
       }
     },
@@ -139,6 +149,7 @@
     "@types/vscode": "^1.107.0",
     "@vscode/test-cli": "^0.0.11",
     "@vscode/test-electron": "^2.5.2",
+    "@vscode/vsce": "^4.0.0",
     "esbuild": "^0.28.1",
     "eslint": "^9.39.1",
     "mocha": "^11.3.0",
