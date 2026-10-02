@@ -1,0 +1,34 @@
+# Sources
+extension.ts
+client/**
+**/*.ts
+
+# Build configuration and tooling
+esbuild.js
+tsconfig.json
+eslint.config.mjs
+.vscode-test.js
+node_modules/**
+package-lock.json
+
+# Compiled test bundles and source maps
+dist/client/**
+**/*.map
+
+# Repository and editor configuration
+.vscode/**
+.vscode-test/**
+.github/**
+.gitignore
+.vscodeignore
+
+# Test fixtures and scratch files
+assets/test/**
+out/**
+notes.txt
+test.txt
+syntaxes/languageWordsList.txt
+*.vsix
+
+# Contributor documentation stays on GitHub
+CONTRIBUTING.md
