@@ -3,23 +3,16 @@ If you want to contribute to this project, the recommended workflow is to fork t
 
 ## Prerequisites
 The project is built using Rust and TypeScript. You will need the following tools to build and run the extension:
-* Latest stable Rust toolchain
+* Rust 1.95 or newer (minimum supported version of the trustworthiness checker)
 * Cargo
 * Node.js and npm
 
 ### System Requirements
-This project currently only works in **Linux environments**.
-#### Supported:
+
 * Linux
-* WSL (Windows Subsystem for Linux) *(recommended for Windows users)*
-
-
-#### Not Supported:
+* WSL (Windows Subsystem for Linux)
 * Native Windows
 * macOS
-
-This limitation is due to dependencies from the *Robosapiens Trustworthiness Checker*.
-
 
 ## 1. Quick Start
 
@@ -62,7 +55,7 @@ cargo --version
 
 ```bash
 sudo apt update
-sudo apt install build-essential cmake pkg-config libssl-dev
+sudo apt install build-essential
 ```
 
 > If you're using another Linux distro, install equivalent packages via your package manager.
@@ -84,22 +77,16 @@ npm -v
 
 ### TypeScript Setup
 
-1. Install TypeScript globally:
+1. Install project dependencies:
 
 ```bash
-npm install -g typescript
+npm install
 ```
 
 2. Verify installation:
 
 ```bash
 tsc --version
-```
-
-3. Install project dependencies:
-
-```bash
-npm install
 ```
 
 ---
@@ -177,14 +164,6 @@ This will generate:
 ---
 
 ## 5. Troubleshooting
-
-### Build fails (OpenSSL errors)
-
-```bash
-sudo apt install libssl-dev
-```
-
----
 
 ### Node version issues
 
