@@ -65,7 +65,7 @@ jobs:
       - run: npm ci
 
       - name: Package
-        run: npm vsce package --out dsrv-vscode.vsix
+        run: npx vsce package --out dsrv-vscode.vsix
 
       - name: List what went into the package
         run: npx vsce ls

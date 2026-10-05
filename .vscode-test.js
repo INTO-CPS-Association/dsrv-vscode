@@ -4,7 +4,7 @@ module.exports = defineConfig([
   {
     label: "integrationTests",
     files: "dist/**/*.integration.test.js",
-    version: "stable",
+    version: '1.107.0',
     // Remove --disable-gpu to use hardware acceleration if available
     // Add --info to see more detailed logs in the terminal
     launchArgs: [
