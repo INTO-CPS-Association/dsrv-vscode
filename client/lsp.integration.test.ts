@@ -4,8 +4,21 @@ import * as vscode from "vscode";
 import * as os from "os";
 import * as path from "path";
 import * as fs from "fs";
+import { spawnSync } from "child_process";
+import { resolveBinary } from "./src/binaries";
 
 suite("Language Server Integration Test Suite", () => {
+
+  suiteSetup(function () {
+    if (!languageServerAvailable()) {
+      console.log(
+        "Skipping language server tests: dsrv-lsp was not found. " +
+          "Build it and set DSRV.lspPath, or put it on PATH",
+      );
+      this.skip()
+    }
+  });
+
   const tempDir = os.tmpdir();
   // Define test file paths
   const files = {
@@ -223,6 +236,22 @@ suite("Language Server Integration Test Suite", () => {
     });
   });
 });
+
+function languageServerAvailable(): boolean {
+  const { command, exists } = resolveBinary("dsrv-lsp");
+  if (exists === true) {
+    return true;
+  }
+  if (exists === false) {
+    return false;
+  }
+
+  const probe = spawnSync(
+    process.platform === "win32" ? "where" : "which",
+    [command],
+  );
+  return probe.status === 0;
+}
 
 // Helper Functions
 function sleep(ms: number) {
