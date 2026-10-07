@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import * as path from 'path';
 import { getChannel, initLogger, log, show } from './client/src/logger';
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, Trace } from 'vscode-languageclient/node';
 import { runSimpleCommand, runWithInput, runWithInputAndTypes, runWithTypes } from './client/src/commands';
@@ -11,7 +10,6 @@ export function activate(context: vscode.ExtensionContext): void {
   initLogger('DSRV');
   initBinaries(context);
   log('DSRV extension activated');
-  show();
 
   const outputChannel = getChannel();
 
@@ -33,7 +31,6 @@ export function activate(context: vscode.ExtensionContext): void {
     log(`Failed to start dsrv-lsp: ${message}`);
     void vscode.window.showErrorMessage(`Failed to start dsrv-lsp: ${message}`);
   });
-  client.setTrace(Trace.Verbose);
   context.subscriptions.push(client);
 
   const commands = [
