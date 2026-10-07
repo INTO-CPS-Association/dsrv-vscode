@@ -83,9 +83,11 @@ async function reportMissingChecker(attempted: string): Promise<void> {
 }
 
 function currentFilePath(): string | undefined {
-  return vscode.window.visibleTextEditors.find(
-    (editor) => editor.document.uri.scheme === "file",
-  )?.document.uri.fsPath;
+  const editor = vscode.window.activeTextEditor;
+  if (!editor || editor.document.uri.scheme !== "file") {
+    return undefined;
+  }
+  return editor.document.uri.fsPath;
 }
 
 async function chooseInputFile(): Promise<string | undefined> {
@@ -138,6 +140,7 @@ export function runSimpleCommand(): void {
 export function runWithTypes(): void {
   const modelFile = currentFilePath();
   if (!modelFile) {
+    vscode.window.showErrorMessage("Open a .dsrv file to run it.");
     return;
   }
 
