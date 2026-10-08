@@ -27,18 +27,24 @@ suite("Commands Integration Test Suite", () => {
     assert.ok(binPath.length > 0, "Binary path should not be empty");
   });
 
-  test("builds the current checker CLI command", () => {
-    const built = command.buildCommand(
-      "/opt/trustworthiness_checker",
+  test("builds the checker arguments", () => {
+    const args = command.buildArgs(
       "/tmp/model.dsrv",
       "/tmp/model.input",
       "typed-untimed",
     );
+    const plain = args.map((a) => (typeof a === "string" ? a : a.value));
 
-    assert.ok(built.includes("--input-file '/tmp/model.input'"));
-    assert.ok(built.includes("--semantics typed-untimed"));
-    assert.ok(built.includes("--output-stdout"));
-    assert.ok(!built.includes("--parser"));
+    assert.deepStrictEqual(plain, [
+      "/tmp/model.dsrv",
+      "--input-file",
+      "/tmp/model.input",
+      "--language",
+      "dsrv",
+      "--semantics",
+      "typed-untimed",
+      "--output-stdout",
+    ]);
   });
 
   test("test commands no active editor", async () => {
@@ -54,29 +60,27 @@ suite("Commands Integration Test Suite", () => {
     );
   });
 
-  test("Test Run simple Command", async () => {
-    const doc = await vscode.workspace.openTextDocument(vscode.Uri.file(tmpFile));
-    await vscode.window.showTextDocument(doc);
-
-    const initialTerminal = vscode.window.terminals.length;
-    command.runSimpleCommand();
-
-    assert.ok(
-      vscode.window.terminals.length >= initialTerminal,
-      "Terminal should be created or reused",
+  test("creates a dsrv task for the model", () => {
+    const task = command.createRunTask(
+      "/tmp/model.dsrv",
+      "/tmp/model.input",
+      "untimed",
+      "/opt/trustworthiness_checker",
     );
+
+    assert.strictEqual(task.definition.type, "dsrv");
+    assert.strictEqual(task.source, "DSRV");
+    assert.ok(task.name.includes("model.dsrv"));
   });
 
-  test("Test command with typed", async () => {
-    const doc = await vscode.workspace.openTextDocument(vscode.Uri.file(tmpFile));
-    await vscode.window.showTextDocument(doc);
-
-    const initialTerminal = vscode.window.terminals.length;
-    command.runWithTypes();
-
-    assert.ok(
-      vscode.window.terminals.length >= initialTerminal,
-      "Terminal should be created or reused",
+  test("carries the semantics in the task definition", () => {
+    const task = command.createRunTask(
+      "/tmp/model.dsrv",
+      "/tmp/model.input",
+      "typed-untimed",
+      "/opt/trustworthiness_checker",
     );
+
+    assert.strictEqual(task.definition.semantics, "typed-untimed");
   });
 });
