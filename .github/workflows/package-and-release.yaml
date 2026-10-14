@@ -1,0 +1,104 @@
+name: Package and release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    name: ${{ matrix.target }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [linux-x64, win32-x64, darwin-arm64, darwin-x64]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Read the pinned binary versions
+        id: pins
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "lsp=$(jq -r '."dsrv-lsp"' bundled-binaries.json)" >> "$GITHUB_OUTPUT"
+          echo "checker=$(jq -r '."trustworthiness_checker"' bundled-binaries.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Fetch the pinned binaries
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LSP_TAG: ${{ steps.pins.outputs.lsp }}
+          CHECKER_TAG: ${{ steps.pins.outputs.checker }}
+          TARGET: ${{ matrix.target }}
+        run: |
+          set -euo pipefail
+
+          suffix=""
+          if [ "$TARGET" = "win32-x64" ]; then
+            suffix=".exe"
+          fi
+
+          mkdir -p bin downloaded
+
+          gh release download "$LSP_TAG" \
+            --repo INTO-CPS-Association/dsrv-lsp \
+            --pattern "dsrv-lsp-${TARGET}${suffix}" \
+            --dir downloaded
+          mv "downloaded/dsrv-lsp-${TARGET}${suffix}" "bin/dsrv-lsp${suffix}"
+
+          gh release download "$CHECKER_TAG" \
+            --repo INTO-CPS-Association/robosapiens-trustworthiness-checker \
+            --pattern "trustworthiness_checker-${TARGET}${suffix}" \
+            --dir downloaded
+          mv "downloaded/trustworthiness_checker-${TARGET}${suffix}" \
+             "bin/trustworthiness_checker${suffix}"
+
+          chmod +x bin/*
+          ls -lh bin/
+
+      - name: Confirm the binaries are in the package
+        shell: bash
+        run: |
+          set -euo pipefail
+          included=$(npx vsce ls | grep -c '^bin/' || true)
+          echo "files under bin/: $included"
+          if [ "$included" -ne 2 ]; then
+            echo "::error::expected both binaries under bin/, found $included"
+            npx vsce ls
+            exit 1
+          fi
+
+      - name: Package
+        run: |
+          npx vsce package \
+            --target ${{ matrix.target }} \
+            --out "dsrv-vscode-${{ matrix.target }}.vsix"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vsix-${{ matrix.target }}
+          path: dsrv-vscode-${{ matrix.target }}.vsix
+          if-no-files-found: error
+
+      - name: Attach to the release
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            --title "$GITHUB_REF_NAME" --generate-notes || true
+          gh release upload "$GITHUB_REF_NAME" \
+            "dsrv-vscode-${{ matrix.target }}.vsix" --clobber
