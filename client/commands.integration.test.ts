@@ -1,86 +1,139 @@
-import * as assert from "assert";
+import { deepStrictEqual, strictEqual, doesNotReject } from "assert";
 import { suite, test } from "mocha";
 import * as vscode from "vscode";
-import * as command from "./src/commands";
-import * as os from "os";
-import path from "path";
-import * as fs from "fs";
 
-suite("Commands Integration Test Suite", () => {
-  const tmpDir = os.tmpdir();
-  const tmpFile = path.join(tmpDir, "test_model.dsrv");
-  const tmpInput = path.join(tmpDir, "test_model.input");
+import {
+  buildArgs,
+  createRunTask,
+  effectiveRuntime,
+  run,
+  runWith,
+  statusText,
+} from "./src/commands";
 
-  setup(async () => {
-    fs.writeFileSync(tmpFile, "in a: Int\nin b: Int\nout c: Int\nc = a + b");
-    fs.writeFileSync(tmpInput, "0: x = 1\ny = 2\n1: x = 2\ny = 3\n2: x = 3\ny = 4");
-  });
+function flat(args: ReturnType<typeof buildArgs>): string [] {
+  return args.map((arg) => (typeof arg === "string" ? arg : arg.value));
+}
 
-  teardown(async () => {
-    if (fs.existsSync(tmpFile)) fs.unlinkSync(tmpFile);
-    if (fs.existsSync(tmpInput)) fs.unlinkSync(tmpInput);
-    await vscode.commands.executeCommand("workbench.action.closeAllEditors");
-  });
-
-  test("test getBinaryPath", () => {
-    const binPath = command.getBinaryPath();
-    assert.ok(binPath.length > 0, "Binary path should not be empty");
-  });
-
-  test("builds the checker arguments", () => {
-    const args = command.buildArgs(
-      "/tmp/model.dsrv",
-      "/tmp/model.input",
-      "typed-untimed",
-    );
-    const plain = args.map((a) => (typeof a === "string" ? a : a.value));
-
-    assert.deepStrictEqual(plain, [
-      "/tmp/model.dsrv",
+suite("buildArgs", () => {
+  test("omits both flags when nothing is configured", () => {
+    deepStrictEqual(flat(buildArgs("/m/model.dsrv", "/m/model.input")), [
+      "/m/model.dsrv",
       "--input-file",
-      "/tmp/model.input",
+      "/m/model.input",
       "--language",
       "dsrv",
-      "--semantics",
-      "typed-untimed",
       "--output-stdout",
     ]);
   });
 
-  test("test commands no active editor", async () => {
-    // Ensure no active editor
+  test("passes the semantics when one is configured", () => {
+    const args = flat(
+      buildArgs("/m/model.dsrv", "/m/model.input", "typed-untimed"),
+    );
+    deepStrictEqual(args.slice(5, 7), ["--semantics", "typed-untimed"]);
+    strictEqual(args.includes("--runtime"), false);
+  });
+
+  test("passes the runtime when one is configured", () => {
+    const args = flat(
+      buildArgs("/m/model.dsrv", "/m/model.input", undefined, "dataflow"),
+    );
+    deepStrictEqual(args.slice(5, 7), ["--runtime", "dataflow"]);
+    strictEqual(args.includes("--semantics"), false);
+  });
+
+  test("puts --output-stdout last with both flags present", () => {
+    const args = flat(
+      buildArgs("/m/model.dsrv", "/m/model.input", "causal", "semi-sync"),
+    );
+    deepStrictEqual(args, [
+      "/m/model.dsrv",
+      "--input-file",
+      "/m/model.input",
+      "--language",
+      "dsrv",
+      "--semantics",
+      "causal",
+      "--runtime",
+      "semi-sync",
+      "--output-stdout",
+    ]);
+  });
+});
+
+suite("effectiveRuntime", () => {
+  test("leaves a configured runtime alone", () => {
+    strictEqual(effectiveRuntime("typed-untimed", "dataflow"), "dataflow");
+  });
+
+  test("stays unset when nothing is configured", () => {
+    strictEqual(effectiveRuntime("typed-untimed", undefined), undefined);
+  });
+
+  test("selects semi-sync for causal when nothing is configured", () => {
+    strictEqual(effectiveRuntime("causal", undefined), "semi-sync");
+  });
+
+  test("overrides a configured runtime that causal cannot use", () => {
+    strictEqual(effectiveRuntime("causal", "dataflow"), "semi-sync");
+  });
+});
+
+suite("createRunTask", () => {
+  test("is a dsrv task that names the model and records both choices", () => {
+    const task = createRunTask(
+      "/m/model.dsrv",
+      "/m/model.input",
+      "causal",
+      "trustworthiness_checker",
+      "semi-sync",
+    );
+
+    strictEqual(task.definition.type, "dsrv");
+    strictEqual(task.source, "DSRV");
+    strictEqual(task.name.includes("model.dsrv"), true);
+    strictEqual(task.definition.semantics, "causal");
+    strictEqual(task.definition.runtime, "semi-sync");
+  });
+
+  test("records null rather than undefined when a choice is unset", () => {
+    const task = createRunTask(
+      "/m/model.dsrv",
+      "/m/model.input",
+      undefined,
+      "trustworthiness_checker",
+    );
+
+    strictEqual(task.definition.semantics, null);
+    strictEqual(task.definition.runtime, null);
+  });
+});
+
+suite("statusText", () => {
+  test("names the checker's default rather than guessing it", () => {
+    strictEqual(statusText(undefined, undefined), "DSRV: checker default");
+  });
+
+  test("shows the semantics alone when no runtime applies", () => {
+    strictEqual(statusText("typed-untimed", undefined), "DSRV: typed-untimed");
+  });
+
+  test("shows both when a runtime applies", () => {
+    strictEqual(statusText("causal", "semi-sync"), "DSRV: causal · semi-sync");
+  });
+});
+
+suite("with no active editor", () => {
+  setup(async () => {
     await vscode.commands.executeCommand("workbench.action.closeAllEditors");
-
-    assert.doesNotThrow(() => command.runSimpleCommand(), "runSimpleCommand should not throw");
-    assert.doesNotThrow(() => command.runWithTypes(), "runWithTypes should not throw");
-    await assert.doesNotReject(command.runWithInput(), "runWithInput should not reject");
-    await assert.doesNotReject(
-      command.runWithInputAndTypes(),
-      "runWithInputAndTypes should not reject",
-    );
   });
 
-  test("creates a dsrv task for the model", () => {
-    const task = command.createRunTask(
-      "/tmp/model.dsrv",
-      "/tmp/model.input",
-      "untimed",
-      "/opt/trustworthiness_checker",
-    );
-
-    assert.strictEqual(task.definition.type, "dsrv");
-    assert.strictEqual(task.source, "DSRV");
-    assert.ok(task.name.includes("model.dsrv"));
+  test("run reports instead of throwing", async () => {
+    await doesNotReject(run());
   });
 
-  test("carries the semantics in the task definition", () => {
-    const task = command.createRunTask(
-      "/tmp/model.dsrv",
-      "/tmp/model.input",
-      "typed-untimed",
-      "/opt/trustworthiness_checker",
-    );
-
-    assert.strictEqual(task.definition.semantics, "typed-untimed");
+  test("runWith reports instead of opening a picker", async () => {
+    await doesNotReject(runWith());
   });
 });

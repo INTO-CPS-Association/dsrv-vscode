@@ -10,10 +10,9 @@ suite('Extension Unit Test Suite', () => {
 
   test('activate registers the language client and commands', async () => {
     const expectedCommands = [
-      'DSRV.runCurrentFile',
-      'DSRV.runWithInput',
-      'DSRV.runWithTypes',
-      'DSRV.runWithInputAndTypes',
+      "DSRV.run",
+      "DSRV.runWith",
+      "DSRV.selectSemantics",
     ];
     let commands = await vscode.commands.getCommands(true);
 

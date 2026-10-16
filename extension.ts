@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
-import { getChannel, initLogger, log, show } from './client/src/logger';
-import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, Trace } from 'vscode-languageclient/node';
-import { runSimpleCommand, runWithInput, runWithInputAndTypes, runWithTypes } from './client/src/commands';
+import { getChannel, initLogger, log } from './client/src/logger';
+import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient/node';
 import { initBinaries, resolveBinary } from './client/src/binaries';
+import { run, runWith, selectSemantics, registerStatusBar } from './client/src/commands';
 
 let client: LanguageClient;
 
@@ -33,14 +33,13 @@ export function activate(context: vscode.ExtensionContext): void {
   });
   context.subscriptions.push(client);
 
-  const commands = [
-    vscode.commands.registerCommand('DSRV.runCurrentFile', runSimpleCommand),
-    vscode.commands.registerCommand('DSRV.runWithInput', runWithInput),
-    vscode.commands.registerCommand('DSRV.runWithTypes', runWithTypes),
-    vscode.commands.registerCommand('DSRV.runWithInputAndTypes', runWithInputAndTypes),
-  ];
+  context.subscriptions.push(
+    vscode.commands.registerCommand('DSRV.run', run),
+    vscode.commands.registerCommand('DSRV.runWith', runWith),
+    vscode.commands.registerCommand('DSRV.selectSemantics', selectSemantics),
+  );
 
-  context.subscriptions.push(...commands);
+  registerStatusBar(context);
 }
 
 export function deactivate(): Thenable<void> | undefined {
