@@ -140,6 +140,11 @@ export async function run(): Promise<void> {
 
 /** Run the current model with semantics chosen for this run only. */
 export async function runWith(): Promise<void> {
+  if (!currentFilePath()) {
+    void vscode.window.showErrorMessage("Open a .dsrv file to run it.");
+    return;
+  }
+  
   const picked = await pickSemantics("Run with");
   if (!picked) {
     return;

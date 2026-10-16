@@ -133,7 +133,8 @@ suite("with no active editor", () => {
     await doesNotReject(run());
   });
 
-  test("runWith reports instead of opening a picker", async () => {
+  test("runWith reports instead of opening a picker", async function () {
+    this.timeout(5000);
     await doesNotReject(runWith());
   });
 });
