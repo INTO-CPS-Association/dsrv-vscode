@@ -126,11 +126,15 @@ function executableName(name: BinaryName): string {
     return process.platform === "win32" ? `${name}.exe` : name;
 }
 
+function bundledTarget(): string {
+    return `${process.platform}-${process.arch}`;
+}
+
 function bundledPath(name: BinaryName): string | undefined {
     if (!extensionUri) {
         return undefined;
     }
-    return vscode.Uri.joinPath(extensionUri, "bin", executableName(name)).fsPath;
+    return vscode.Uri.joinPath(extensionUri, "bin", bundledTarget(), executableName(name)).fsPath;
 }
 
 /**

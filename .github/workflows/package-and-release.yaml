@@ -10,12 +10,7 @@ permissions:
 
 jobs:
   package:
-    name: ${{ matrix.target }}
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        target: [linux-x64, win32-x64, darwin-arm64, darwin-x64]
 
     steps:
       - uses: actions/checkout@v4
@@ -35,61 +30,73 @@ jobs:
           echo "lsp=$(jq -r '."dsrv-lsp"' bundled-binaries.json)" >> "$GITHUB_OUTPUT"
           echo "checker=$(jq -r '."trustworthiness_checker"' bundled-binaries.json)" >> "$GITHUB_OUTPUT"
 
-      - name: Fetch the pinned binaries
+      - name: Fetch every platform's binaries
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
           LSP_TAG: ${{ steps.pins.outputs.lsp }}
           CHECKER_TAG: ${{ steps.pins.outputs.checker }}
-          TARGET: ${{ matrix.target }}
         run: |
           set -euo pipefail
 
-          suffix=""
-          if [ "$TARGET" = "win32-x64" ]; then
-            suffix=".exe"
-          fi
+          mkdir -p downloaded
 
-          mkdir -p bin downloaded
+          for target in linux-x64 win32-x64 darwin-arm64 darwin-x64; do
+            suffix=""
+            if [ "$target" = "win32-x64" ]; then
+              suffix=".exe"
+            fi
 
-          gh release download "$LSP_TAG" \
-            --repo INTO-CPS-Association/dsrv-lsp \
-            --pattern "dsrv-lsp-${TARGET}${suffix}" \
-            --dir downloaded
-          mv "downloaded/dsrv-lsp-${TARGET}${suffix}" "bin/dsrv-lsp${suffix}"
+            mkdir -p "bin/$target"
 
-          gh release download "$CHECKER_TAG" \
-            --repo INTO-CPS-Association/robosapiens-trustworthiness-checker \
-            --pattern "trustworthiness_checker-${TARGET}${suffix}" \
-            --dir downloaded
-          mv "downloaded/trustworthiness_checker-${TARGET}${suffix}" \
-             "bin/trustworthiness_checker${suffix}"
+            gh release download "$LSP_TAG" \
+              --repo INTO-CPS-Association/dsrv-lsp \
+              --pattern "dsrv-lsp-${target}${suffix}" \
+              --dir downloaded
+            mv "downloaded/dsrv-lsp-${TARGET}${suffix}" \
+               "bin/$target/dsrv-lsp${suffix}"
 
-          chmod +x bin/*
-          ls -lh bin/
+            gh release download "$CHECKER_TAG" \
+              --repo INTO-CPS-Association/robosapiens-trustworthiness-checker \
+              --pattern "trustworthiness_checker-${target}${suffix}" \
+              --dir downloaded
+            mv "downloaded/trustworthiness_checker-${TARGET}${suffix}" \
+               "bin/$target/trustworthiness_checker${suffix}"
+          done
 
-      - name: Confirm the binaries are in the package
+          chmod +x bin/
+          find bin -type f -exec ls -lh {} +
+
+      - name: Confirm every platform's binaries are in the package
         shell: bash
         run: |
           set -euo pipefail
           included=$(npx vsce ls | grep -c '^bin/' || true)
           echo "files under bin/: $included"
-          if [ "$included" -ne 2 ]; then
-            echo "::error::expected both binaries under bin/, found $included"
-            npx vsce ls
+          if [ "$included" -ne 8 ]; then
+            echo "::error::expected 8 bundled binaries, found $included"
+            npx vsce ls | grep '^bin/' || true
             exit 1
           fi
 
       - name: Package
+        run: npx vsce package --out dsrv-vscode.vsix
+
+      - name: Report and bound the package size
+        shell: bash
         run: |
-          npx vsce package \
-            --target ${{ matrix.target }} \
-            --out "dsrv-vscode-${{ matrix.target }}.vsix"
+          set -euo pipefail
+          bytes=$(stat -c%s dsrv-vscode.vsix)
+          echo "package size: $(numfmt --to=iec "$bytes")"
+          if [ "$bytes" -gt $((250 * 1024 * 1024)) ]; then
+            echo "::error::package exceeds the 250 MB Open VSX limit"
+            exit 1
+          fi
 
       - uses: actions/upload-artifact@v4
         with:
-          name: vsix-${{ matrix.target }}
-          path: dsrv-vscode-${{ matrix.target }}.vsix
+          name: vsix
+          path: dsrv-vscode.vsix
           if-no-files-found: error
 
       - name: Attach to the release
@@ -99,6 +106,5 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release create "$GITHUB_REF_NAME" \
-            --title "$GITHUB_REF_NAME" --generate-notes || true
-          gh release upload "$GITHUB_REF_NAME" \
-            "dsrv-vscode-${{ matrix.target }}.vsix" --clobber
+             --title "$GITHUB_REF_NAME" --generate-notes || true
+          gh release upload "$GITHUB_REF_NAME" dsrv-vscode.vsix --clobber
