@@ -53,14 +53,14 @@ jobs:
               --repo INTO-CPS-Association/dsrv-lsp \
               --pattern "dsrv-lsp-${target}${suffix}" \
               --dir downloaded
-            mv "downloaded/dsrv-lsp-${TARGET}${suffix}" \
+            mv "downloaded/dsrv-lsp-${target}${suffix}" \
                "bin/$target/dsrv-lsp${suffix}"
 
             gh release download "$CHECKER_TAG" \
               --repo INTO-CPS-Association/robosapiens-trustworthiness-checker \
               --pattern "trustworthiness_checker-${target}${suffix}" \
               --dir downloaded
-            mv "downloaded/trustworthiness_checker-${TARGET}${suffix}" \
+            mv "downloaded/trustworthiness_checker-${target}${suffix}" \
                "bin/$target/trustworthiness_checker${suffix}"
           done
 
