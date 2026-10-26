@@ -65,13 +65,13 @@ jobs:
       - run: npm ci
 
       - name: Package
-        run: npx vsce package --out dsrv-vscode.vsix
+        run: npx vsce package --out robosapiens-trustworthiness-checker-vscode.vsix
 
       - name: List what went into the package
         run: npx vsce ls
 
       - uses: actions/upload-artifact@v4
         with:
-          name: dsrv-vscode-vsix
-          path: dsrv-vscode.vsix
+          name: robosapiens-trustworthiness-checker-vscode-vsix
+          path: robosapiens-trustworthiness-checker-vscode.vsix
           if-no-files-found: error

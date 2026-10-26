@@ -80,13 +80,13 @@ jobs:
           fi
 
       - name: Package
-        run: npx vsce package --out dsrv-vscode.vsix
+        run: npx vsce package --out robosapiens-trustworthiness-checker-vscode.vsix
 
       - name: Report and bound the package size
         shell: bash
         run: |
           set -euo pipefail
-          bytes=$(stat -c%s dsrv-vscode.vsix)
+          bytes=$(stat -c%s robosapiens-trustworthiness-checker-vscode.vsix)
           echo "package size: $(numfmt --to=iec "$bytes")"
           if [ "$bytes" -gt $((250 * 1024 * 1024)) ]; then
             echo "::error::package exceeds the 250 MB Open VSX limit"
@@ -96,7 +96,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: vsix
-          path: dsrv-vscode.vsix
+          path: robosapiens-trustworthiness-checker-vscode.vsix
           if-no-files-found: error
 
       - name: Attach to the release
@@ -107,4 +107,4 @@ jobs:
         run: |
           gh release create "$GITHUB_REF_NAME" \
              --title "$GITHUB_REF_NAME" --generate-notes || true
-          gh release upload "$GITHUB_REF_NAME" dsrv-vscode.vsix --clobber
+          gh release upload "$GITHUB_REF_NAME" robosapiens-trustworthiness-checker-vscode.vsix --clobber

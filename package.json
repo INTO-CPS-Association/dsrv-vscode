@@ -1,6 +1,6 @@
 {
-  "name": "dsrv-vscode",
-  "displayName": "DSRV Language Support",
+  "name": "robosapiens-trustworthiness-checker-vscode",
+  "displayName": "RoboSAPIENS Trustworthiness Checker",
   "description": "Language support for the RoboSAPIENS trustworthiness checker. Includes syntax highlighting, completion, diagnostics, and testing support for DSRV runtime verification specifications.",
   "version": "1.0.0",
   "publisher": "intocps",
