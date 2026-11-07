@@ -7,11 +7,7 @@ import { resolveBinary, settingId, updateSetting } from "./binaries";
 const TASK_TYPE = "dsrv";
 
 /** Every semantics the checker accepts for DSRV */
-export const SEMANTICS = [
-  "untimed",
-  "typed-untimed",
-  "causal"
-] as const;
+export const SEMANTICS = [ "untimed", "causal" ] as const;
 
 export type DsrvSemantics = (typeof SEMANTICS)[number];
 

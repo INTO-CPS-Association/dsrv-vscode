@@ -75,22 +75,11 @@
         "DSRV.semantics": {
           "type": "string",
           "default": "",
-          "enum": [
-            "",
-            "untimed",
-            "typed-untimed",
-            "causal"
-          ],
-          "enumItemLabels": [
-            "Checker default",
-            "untimed",
-            "typed-untimed",
-            "causal"
-          ],
+          "enum": [ "", "untimed", "causal" ],
+          "enumItemLabels": [ "Checker default", "untimed", "causal" ],
           "enumDescriptions": [
             "Pass no --semantics at all, so the checker's own default applies.",
-            "Gradual typing: checks annotations, infers missing types, and uses type information during evaluation where supported.",
-            "Strict typing: requires annotations on all stream variables.",
+            "The typed semantics. Every declared stream needs a type annotation; types inside expressions are inferred.",
             "Produces values with causal sets identifying supporting input observations. Requires the semi-sync runtime, which the extension selects for you."
           ],
           "markdownDescription": "Semantics used when running a DSRV model. Leave as **Checker default** to pass no `--semantics` flag, so the checker's own default applies.",

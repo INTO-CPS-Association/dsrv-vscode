@@ -29,9 +29,9 @@ suite("buildArgs", () => {
 
   test("passes the semantics when one is configured", () => {
     const args = flat(
-      buildArgs("/m/model.dsrv", "/m/model.input", "typed-untimed"),
+      buildArgs("/m/model.dsrv", "/m/model.input", "untimed"),
     );
-    deepStrictEqual(args.slice(5, 7), ["--semantics", "typed-untimed"]);
+    deepStrictEqual(args.slice(5, 7), ["--semantics", "untimed"]);
     strictEqual(args.includes("--runtime"), false);
   });
 
@@ -64,11 +64,11 @@ suite("buildArgs", () => {
 
 suite("effectiveRuntime", () => {
   test("leaves a configured runtime alone", () => {
-    strictEqual(effectiveRuntime("typed-untimed", "dataflow"), "dataflow");
+    strictEqual(effectiveRuntime("untimed", "dataflow"), "dataflow");
   });
 
   test("stays unset when nothing is configured", () => {
-    strictEqual(effectiveRuntime("typed-untimed", undefined), undefined);
+    strictEqual(effectiveRuntime("untimed", undefined), undefined);
   });
 
   test("selects semi-sync for causal when nothing is configured", () => {
@@ -116,7 +116,7 @@ suite("statusText", () => {
   });
 
   test("shows the semantics alone when no runtime applies", () => {
-    strictEqual(statusText("typed-untimed", undefined), "DSRV: typed-untimed");
+    strictEqual(statusText("untimed", undefined), "DSRV: untimed");
   });
 
   test("shows both when a runtime applies", () => {
